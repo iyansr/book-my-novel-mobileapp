@@ -70,14 +70,9 @@ class Home extends Component {
 					<SectionTitle showLink={true} title='Popular Books' />
 					<Popular
 						data={this.state.dataPopular}
-						onPress={(id, title, author, description, image) => {
-							console.log({ id, title, author, description, image })
+						onPress={data => {
 							this.props.navigation.navigate('Details', {
-								id,
-								title,
-								author,
-								description,
-								image,
+								data,
 							})
 						}}
 					/>
@@ -86,14 +81,9 @@ class Home extends Component {
 
 					<AllNovel
 						data={this.state.data}
-						onPress={(id, title, author, description, image) => {
-							console.log({ id, title, author, description, image })
+						onPress={data => {
 							this.props.navigation.navigate('Details', {
-								id,
-								title,
-								author,
-								description,
-								image,
+								data,
 							})
 						}}
 					/>

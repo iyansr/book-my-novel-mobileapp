@@ -20,9 +20,10 @@ const HomeNavigator = createStackNavigator({
 	},
 	Details: {
 		screen: Details,
-		navigationOptions: () => ({
+		navigationOptions: {
+			tabBarVisible: false,
 			header: null,
-		}),
+		},
 	},
 	Search: { screen: SearchScreen },
 })

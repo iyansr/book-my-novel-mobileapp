@@ -28,15 +28,7 @@ export class AllNovel extends Component {
 								<View style={imageContainer}>
 									<TouchableHighlight
 										style={{ borderRadius: 5 }}
-										onPress={() =>
-											this.props.onPress(
-												da.novel_id,
-												da.title,
-												da.author,
-												da.description,
-												da.image
-											)
-										}>
+										onPress={() => this.props.onPress({ ...da })}>
 										<Image
 											style={image}
 											source={{
@@ -51,15 +43,7 @@ export class AllNovel extends Component {
 										flexDirection: 'column',
 									}}>
 									<Text
-										onPress={() =>
-											this.props.onPress(
-												da.novel_id,
-												da.title,
-												da.author,
-												da.description,
-												da.image
-											)
-										}
+										onPress={() => this.props.onPress({ ...da })}
 										numberOfLines={2}
 										ellipsizeMode='tail'
 										style={{
@@ -74,7 +58,7 @@ export class AllNovel extends Component {
 											disable={true}
 											maxStars={5}
 											rating={4}
-											starSize={15}
+											starSize={12}
 											fullStarColor='#F3AC13'
 											emptyStarColor='#98A0B3'
 										/>

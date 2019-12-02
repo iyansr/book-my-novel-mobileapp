@@ -1,15 +1,39 @@
 import React, { Component } from 'react'
 import { View, Text, StatusBar, Image, ImageBackground } from 'react-native'
-import { Button, Icon } from 'native-base'
+import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
 class Details extends Component {
+	static navigationOptions = {
+		tabBarVisible: false,
+		header: null,
+	}
+	state = {
+		data: this.props.navigation.getParam('data'),
+	}
 	render() {
+		console.log('DETAIL', this.state.data)
+		const {
+			Genre,
+			Status,
+			author,
+			createdAt,
+			description,
+			height,
+			image,
+			isbn,
+			length,
+			novel_id,
+			pages,
+			title,
+			vendor,
+			weight,
+		} = this.state.data
 		return (
 			<ScrollView>
-				<StatusBar backgroundColor='#4a148c' />
 				<ImageBackground
-					source={{ uri: this.props.navigation.getParam('image', '0') }}
+					source={{ uri: image }}
 					style={{
+						backgroundColor: 'black',
 						width: '100%',
 						height: 250,
 						flexDirection: 'column',
@@ -35,7 +59,7 @@ class Details extends Component {
 								width: '60%',
 								marginBottom: 9,
 							}}>
-							{this.props.navigation.getParam('title', '0')}
+							{title}
 						</Text>
 						<Text
 							style={{
@@ -45,7 +69,7 @@ class Details extends Component {
 								fontFamily: 'Poppins-Bold',
 								width: '60%',
 							}}>
-							{this.props.navigation.getParam('author', '0')}
+							{author}
 						</Text>
 					</View>
 				</ImageBackground>
@@ -65,7 +89,7 @@ class Details extends Component {
 							justifyContent: 'flex-end',
 						}}>
 						<Image
-							source={{ uri: this.props.navigation.getParam('image', '0') }}
+							source={{ uri: image }}
 							style={{
 								height: 150,
 								width: 100,
@@ -76,9 +100,33 @@ class Details extends Component {
 					</View>
 				</View>
 				<View style={{ paddingLeft: 20, paddingRight: 20 }}>
-					<Text style={{ fontFamily: 'Poppins-Regular' }}>
-						{this.props.navigation.getParam('description', '0')}
+					<Text
+						style={{
+							fontFamily: 'Poppins-Regular',
+							textAlign: 'justify',
+							lineHeight: 16,
+						}}>
+						{description}
 					</Text>
+				</View>
+				<View
+					style={{
+						paddingHorizontal: 80,
+						paddingVertical: 20,
+					}}>
+					<Button
+						style={{
+							borderRadius: 50,
+							alignContent: 'center',
+							alignItems: 'center',
+							justifyContent: 'center',
+							backgroundColor: '#4a148c',
+							elevation: 8,
+						}}>
+						<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
+							Borrow
+						</Text>
+					</Button>
 				</View>
 			</ScrollView>
 		)

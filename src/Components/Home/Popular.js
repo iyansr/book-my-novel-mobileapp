@@ -25,15 +25,7 @@ export class Popular extends Component {
 						<View key={index}>
 							<TouchableOpacity
 								style={imageContainer}
-								onPress={() =>
-									this.props.onPress(
-										da.novel_id,
-										da.title,
-										da.author,
-										da.description,
-										da.image
-									)
-								}>
+								onPress={() => this.props.onPress({ ...da })}>
 								<Image style={mainImage} source={{ uri: da.image }} />
 							</TouchableOpacity>
 							<Text numberOfLines={1} ellipsizeMode={'tail'} style={authorText}>
