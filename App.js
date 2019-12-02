@@ -15,7 +15,7 @@ const HomeNavigator = createStackNavigator({
 	Home: {
 		screen: Home,
 		navigationOptions: () => ({
-			header: () => <CustomHeader title='BookMyNovel' />,
+			header: () => <CustomHeader title='BookMyNovel' showRight={true} />,
 		}),
 	},
 	Details: {

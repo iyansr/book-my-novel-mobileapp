@@ -32,7 +32,7 @@ class CustomHeader extends Component {
 							<Button transparent>
 								<Icon
 									type='FontAwesome'
-									name='search'
+									name='shopping-cart'
 									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
 								/>
 							</Button>
