@@ -68,7 +68,19 @@ class Home extends Component {
 					showsVerticalScrollIndicator={false}>
 					<Genre genres={this.state.genres} />
 					<SectionTitle showLink={true} title='Popular Books' />
-					<Popular data={this.state.dataPopular} />
+					<Popular
+						data={this.state.dataPopular}
+						onPress={(id, title, author, description, image) => {
+							console.log({ id, title, author, description, image })
+							this.props.navigation.navigate('Details', {
+								id,
+								title,
+								author,
+								description,
+								image,
+							})
+						}}
+					/>
 
 					<SectionTitle showLink={false} title='All Books' />
 

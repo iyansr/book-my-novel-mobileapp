@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, Image, Text, StyleSheet, ScrollView } from 'react-native'
+import {
+	View,
+	Image,
+	Text,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
+} from 'react-native'
 import StarRating from 'react-native-star-rating'
 
 export class Popular extends Component {
@@ -16,9 +23,19 @@ export class Popular extends Component {
 				{this.props.data.map((da, index) => {
 					return (
 						<View key={index}>
-							<View style={imageContainer}>
+							<TouchableOpacity
+								style={imageContainer}
+								onPress={() =>
+									this.props.onPress(
+										da.novel_id,
+										da.title,
+										da.author,
+										da.description,
+										da.image
+									)
+								}>
 								<Image style={mainImage} source={{ uri: da.image }} />
-							</View>
+							</TouchableOpacity>
 							<Text numberOfLines={1} ellipsizeMode={'tail'} style={authorText}>
 								{da.author}
 							</Text>
