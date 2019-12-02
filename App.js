@@ -8,7 +8,7 @@ import Profile from './src/Screens/Profile'
 import { Icon } from 'native-base'
 import History from './src/Screens/History'
 import Details from './src/Screens/Details'
-import SplashScreen from './src/Screens/SplashScree'
+import SplashScreen from './src/Screens/SplashScreen'
 import SearchScreen from './src/Screens/Search'
 
 const HomeNavigator = createStackNavigator({
