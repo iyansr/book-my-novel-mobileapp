@@ -5,7 +5,7 @@ import {
 	Text,
 	StyleSheet,
 	ScrollView,
-	TouchableOpacity,
+	TouchableHighlight,
 } from 'react-native'
 import StarRating from 'react-native-star-rating'
 
@@ -23,11 +23,11 @@ export class Popular extends Component {
 				{this.props.data.map((da, index) => {
 					return (
 						<View key={index}>
-							<TouchableOpacity
+							<TouchableHighlight
 								style={imageContainer}
 								onPress={() => this.props.onPress({ ...da })}>
 								<Image style={mainImage} source={{ uri: da.image }} />
-							</TouchableOpacity>
+							</TouchableHighlight>
 							<Text numberOfLines={1} ellipsizeMode={'tail'} style={authorText}>
 								{da.author}
 							</Text>
