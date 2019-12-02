@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, Image } from 'react-native'
+import { View, ScrollView, Text, SafeAreaView } from 'react-native'
 import Genre from '../Components/Home/Genre'
 import SectionTitle from '../Components/Home/SectionTitle'
 import Popular from '../Components/Home/Popular'
 import AllNovel from '../Components/Home/AllNovel'
 import Axios from 'axios'
+import BottomHeader from '../Components/Header/BottomHeader'
 
 class Home extends Component {
 	state = {
@@ -47,24 +48,44 @@ class Home extends Component {
 
 	render() {
 		if (this.state.isLoading) {
-			return <Text>Loading...</Text>
+			return (
+				<>
+					<BottomHeader />
+					<Text>Loading...</Text>
+				</>
+			)
 		}
 		return (
 			<View>
+				<BottomHeader
+					onPress={() => {
+						this.props.navigation.navigate('Search')
+						console.log('ini Search')
+					}}
+				/>
 				<ScrollView
 					contentContainerStyle={{ padding: 12 }}
 					showsVerticalScrollIndicator={false}>
 					<Genre genres={this.state.genres} />
 					<SectionTitle showLink={true} title='Popular Books' />
 					<Popular data={this.state.dataPopular} />
+
 					<SectionTitle showLink={false} title='All Books' />
+
 					<AllNovel
 						data={this.state.data}
-						onPress={id => {
-							console.log(id)
-							this.props.navigation.navigate('Details')
+						onPress={(id, title, author, description, image) => {
+							console.log({ id, title, author, description, image })
+							this.props.navigation.navigate('Details', {
+								id,
+								title,
+								author,
+								description,
+								image,
+							})
 						}}
 					/>
+					<View style={{ marginTop: 60 }}></View>
 				</ScrollView>
 			</View>
 		)

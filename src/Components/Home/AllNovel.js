@@ -21,14 +21,22 @@ export class AllNovel extends Component {
 							key={index}
 							style={{
 								paddingHorizontal: 0,
-								marginTop: 20,
+								marginTop: 0,
 								justifyContent: 'space-around',
 							}}>
 							<View style={mainContainer}>
 								<View style={imageContainer}>
 									<TouchableHighlight
 										style={{ borderRadius: 5 }}
-										onPress={() => this.props.onPress(da.novel_id)}>
+										onPress={() =>
+											this.props.onPress(
+												da.novel_id,
+												da.title,
+												da.author,
+												da.description,
+												da.image
+											)
+										}>
 										<Image
 											style={image}
 											source={{
@@ -43,13 +51,21 @@ export class AllNovel extends Component {
 										flexDirection: 'column',
 									}}>
 									<Text
-										onPress={() => this.props.onPress(da.novel_id)}
+										onPress={() =>
+											this.props.onPress(
+												da.novel_id,
+												da.title,
+												da.author,
+												da.description,
+												da.image
+											)
+										}
 										numberOfLines={2}
 										ellipsizeMode='tail'
 										style={{
-											fontWeight: 'bold',
+											fontFamily: 'Poppins-Bold',
 											width: Dimensions.get('window').width - 160,
-											fontSize: 18,
+											fontSize: 15,
 										}}>
 										{da.title}
 									</Text>
@@ -70,8 +86,9 @@ export class AllNovel extends Component {
 										style={{
 											width: 120,
 											marginTop: 5,
-											fontSize: 14,
+											fontSize: 12,
 											color: '#98A0B3',
+											fontFamily: 'Poppins-Regular',
 										}}>
 										{da.author}
 									</Text>
@@ -82,7 +99,12 @@ export class AllNovel extends Component {
 												backgroundColor:
 													da.Status === 'Available' ? '#00C853' : '#F48FB1',
 											}}>
-											<Text style={{ fontSize: 12, color: 'white' }}>
+											<Text
+												style={{
+													fontSize: 12,
+													color: 'white',
+													fontFamily: 'Poppins-Regular',
+												}}>
 												{da.Status}
 											</Text>
 										</Badge>
@@ -90,9 +112,14 @@ export class AllNovel extends Component {
 											style={{
 												marginLeft: 10,
 												height: 16,
-												backgroundColor: '#6B52AE',
+												backgroundColor: '#4a148c',
 											}}>
-											<Text style={{ fontSize: 12, color: 'white' }}>
+											<Text
+												style={{
+													fontSize: 12,
+													color: 'white',
+													fontFamily: 'Poppins-Regular',
+												}}>
 												{da.Genre}
 											</Text>
 										</Badge>

@@ -86,6 +86,9 @@
 		<string>seguisb.ttf</string>
 		<string>seguisbi.ttf</string>
 		<string>seguisli.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-RegularItalic.ttf</string>
 	</array>
 </dict>
 </plist>

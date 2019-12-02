@@ -1,13 +1,16 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Home from './src/Screens/Home'
 import CustomHeader from './src/Components/Header/Header'
 import Profile from './src/Screens/Profile'
 import { Icon } from 'native-base'
 import History from './src/Screens/History'
 import Details from './src/Screens/Details'
+import SplashScreen from './src/Screens/SplashScree'
+import SearchScreen from './src/Screens/Search'
+import { StatusBar, Text, View } from 'react-native'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
@@ -18,7 +21,11 @@ const HomeNavigator = createStackNavigator({
 	},
 	Details: {
 		screen: Details,
+		navigationOptions: () => ({
+			header: null,
+		}),
 	},
+	Search: { screen: SearchScreen },
 })
 
 const BottomNavigator = createBottomTabNavigator(
@@ -28,7 +35,11 @@ const BottomNavigator = createBottomTabNavigator(
 			navigationOptions: {
 				tabBarLabel: 'Explore',
 				tabBarIcon: ({ tintColor }) => (
-					<Icon type='FontAwesome' name='compass' style={{ fontSize: 23 }} />
+					<Icon
+						type='FontAwesome'
+						name='compass'
+						style={{ color: tintColor, fontSize: 23 }}
+					/>
 				),
 			},
 		},
@@ -37,7 +48,11 @@ const BottomNavigator = createBottomTabNavigator(
 			navigationOptions: {
 				tabBarLabel: 'History',
 				tabBarIcon: ({ tintColor }) => (
-					<Icon type='FontAwesome' name='history' style={{ fontSize: 23 }} />
+					<Icon
+						type='FontAwesome'
+						name='history'
+						style={{ color: tintColor, fontSize: 23 }}
+					/>
 				),
 			},
 		},
@@ -46,15 +61,19 @@ const BottomNavigator = createBottomTabNavigator(
 			navigationOptions: {
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ tintColor }) => (
-					<Icon type='FontAwesome' name='user' style={{ fontSize: 23 }} />
+					<Icon
+						type='FontAwesome'
+						name='user'
+						style={{ color: tintColor, fontSize: 23 }}
+					/>
 				),
 			},
 		},
 	},
 	{
 		tabBarOptions: {
-			activeTintColor: '#6B52AE',
-			inactiveTintColor: 'grey',
+			activeTintColor: '#4a148c',
+			inactiveTintColor: '#757575',
 			style: {
 				backgroundColor: 'white',
 				borderTopWidth: 0,
@@ -67,4 +86,9 @@ const BottomNavigator = createBottomTabNavigator(
 	}
 )
 
-export default createAppContainer(BottomNavigator)
+const switchScreen = createSwitchNavigator({
+	Splash: SplashScreen,
+	App: BottomNavigator,
+})
+
+export default createAppContainer(switchScreen)

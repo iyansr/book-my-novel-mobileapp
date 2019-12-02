@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 export const headerStyle = StyleSheet.create({
 	header: {
-		backgroundColor: '#fff',
+		backgroundColor: '#4a148c',
 		elevation: 0,
 	},
 	bottomHeader: {
@@ -13,7 +13,9 @@ export const headerStyle = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	bottomHeaderButon: {
-		height: 40,
+		flexDirection: 'row',
+		alignItems: 'center',
+		height: 38,
 		width: '90%',
 		backgroundColor: 'white',
 		elevation: 0,
@@ -22,9 +24,8 @@ export const headerStyle = StyleSheet.create({
 		marginBottom: 10,
 	},
 	headerTitle: {
-		fontSize: 26,
 		marginLeft: 8,
-		color: '#11171E',
-		fontWeight: 'bold',
+		color: 'white',
+		fontFamily: 'Poppins-Bold',
 	},
 })

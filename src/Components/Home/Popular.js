@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
 	title: {
 		width: 120,
 		marginLeft: 5,
-		fontSize: 16,
-		fontWeight: 'bold',
+		fontSize: 14,
+		fontFamily: 'Poppins-Bold',
 		color: '#303031',
 	},
 	imageContainer: {
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 		lineHeight: 12,
 		color: '#98A0B3',
+		fontFamily: 'Poppins-Regular',
 	},
 })
 

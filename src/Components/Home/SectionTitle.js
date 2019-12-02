@@ -27,17 +27,17 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		marginTop: 20,
 		marginBottom: 10,
-		fontSize: 26,
-		fontWeight: 'bold',
+		fontSize: 18,
+		fontFamily: 'Poppins-Bold',
 	},
 	link: {
 		flex: 1,
-		marginTop: 27,
+		marginTop: 20,
 		marginBottom: 10,
 		marginRight: 10,
 		fontSize: 14,
-		fontWeight: 'bold',
-		color: '#6B52AE',
+		fontFamily: 'Poppins-Bold',
+		color: '#4a148c',
 	},
 })
 

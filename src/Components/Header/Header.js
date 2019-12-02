@@ -1,26 +1,42 @@
 import React, { Component } from 'react'
-import { Header, Body, Title, Right, Icon, Button } from 'native-base'
-import { StatusBar } from 'react-native'
+import { Header, Body, Title, Right, Icon, Button, Left } from 'native-base'
+import { StatusBar, Text, View } from 'react-native'
 import { headerStyle as style } from './style'
+import BottomHeader from './BottomHeader'
 
 class CustomHeader extends Component {
 	render() {
 		const { header, headerTitle } = style
+		const { showLeft, showRight } = this.props
 		return (
 			<>
-				<Header style={header} androidStatusBarColor='#fefefe'>
-					<StatusBar barStyle='dark-content' />
+				<Header style={header}>
+					<StatusBar barStyle='light-content' backgroundColor='#4a148c' />
+					{showLeft ? (
+						<Left>
+							<Button transparent>
+								<Icon
+									type='FontAwesome'
+									name='bars'
+									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
+								/>
+							</Button>
+						</Left>
+					) : null}
+
 					<Body>
 						<Title style={headerTitle}>{this.props.title}</Title>
 					</Body>
 					<Right>
-						<Button transparent>
-							<Icon
-								type='FontAwesome'
-								name='search'
-								style={{ color: '#11171E', fontWeight: 'bold' }}
-							/>
-						</Button>
+						{showRight ? (
+							<Button transparent>
+								<Icon
+									type='FontAwesome'
+									name='search'
+									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
+								/>
+							</Button>
+						) : null}
 					</Right>
 				</Header>
 			</>
