@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, SafeAreaView } from 'react-native'
+import { View, ScrollView, Text } from 'react-native'
 import Genre from '../Components/Home/Genre'
 import SectionTitle from '../Components/Home/SectionTitle'
 import Popular from '../Components/Home/Popular'

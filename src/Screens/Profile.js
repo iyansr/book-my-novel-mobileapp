@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Container, Title, Body } from 'native-base'
+import { Container } from 'native-base'
 import { Text } from 'react-native'
 
 class Profile extends Component {

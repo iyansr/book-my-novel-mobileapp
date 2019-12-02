@@ -1,7 +1,7 @@
 import React from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 
-const FIVE_SECONDS = 5000
+const FIVE_SECONDS = 3000
 
 export default class SplashScreen extends React.Component {
 	componentDidMount() {

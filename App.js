@@ -10,7 +10,6 @@ import History from './src/Screens/History'
 import Details from './src/Screens/Details'
 import SplashScreen from './src/Screens/SplashScree'
 import SearchScreen from './src/Screens/Search'
-import { StatusBar, Text, View } from 'react-native'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
