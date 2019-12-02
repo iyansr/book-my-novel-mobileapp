@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { View, Text, StatusBar, Image, ImageBackground } from 'react-native'
+import {
+	View,
+	Text,
+	StatusBar,
+	Image,
+	ImageBackground,
+	Dimensions,
+	StyleSheet,
+} from 'react-native'
 import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
 class Details extends Component {
@@ -99,7 +107,7 @@ class Details extends Component {
 						/>
 					</View>
 				</View>
-				<View style={{ paddingLeft: 20, paddingRight: 20 }}>
+				<View style={{ paddingLeft: 20, paddingRight: 20, marginBottom: 15 }}>
 					<Text
 						style={{
 							fontFamily: 'Poppins-Regular',
@@ -109,6 +117,51 @@ class Details extends Component {
 						{description}
 					</Text>
 				</View>
+				<View
+					style={{
+						justifyContent: 'center',
+						alignContent: 'center',
+						alignItems: 'center',
+						alignSelf: 'center',
+					}}>
+					<View
+						style={[
+							styles.detailContainer,
+							{ borderBottomWidth: 1, borderBottomColor: '#757575' },
+						]}>
+						<Text style={[styles.boldFont, { fontSize: 18 }]}>Details : </Text>
+					</View>
+
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Published</Text>
+						<Text>{createdAt}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Pages</Text>
+						<Text>{pages}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>ISBN</Text>
+						<Text>{isbn}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Publisher</Text>
+						<Text>{vendor}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Weight</Text>
+						<Text>{weight} Kg</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Height</Text>
+						<Text>{height} Kg</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Length</Text>
+						<Text>{length} Kg</Text>
+					</View>
+				</View>
+
 				<View
 					style={{
 						paddingHorizontal: 80,
@@ -132,5 +185,19 @@ class Details extends Component {
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	boldFont: {
+		fontFamily: 'Poppins-Bold',
+	},
+	detailContainer: {
+		alignItems: 'center',
+		alignContent: 'center',
+		flexDirection: 'row',
+		marginTop: 5,
+		width: Dimensions.get('window').width / 1.3,
+		justifyContent: 'space-between',
+	},
+})
 
 export default Details
