@@ -126,11 +126,7 @@ class Login extends Component {
 							<Label style={{ fontFamily: 'Poppins-Regular' }}>Email</Label>
 							<Input
 								autoCapitalize='none'
-								onChangeText={
-									this._isMounted
-										? email => this.setState({ email })
-										: () => null
-								}
+								onChangeText={email => this.setState({ email })}
 								keyboardType='email-address'
 							/>
 						</Item>
@@ -144,11 +140,7 @@ class Login extends Component {
 							<Label style={{ fontFamily: 'Poppins-Regular' }}>Password</Label>
 							<Input
 								secureTextEntry={true}
-								onChangeText={
-									this._isMounted
-										? password => this.setState({ password })
-										: () => null
-								}
+								onChangeText={password => this.setState({ password })}
 							/>
 						</Item>
 						{this.state.error.error ? (
