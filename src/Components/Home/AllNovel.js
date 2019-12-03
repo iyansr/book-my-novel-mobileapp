@@ -50,6 +50,7 @@ export class AllNovel extends Component {
 											fontFamily: 'Poppins-Bold',
 											width: Dimensions.get('window').width - 160,
 											fontSize: 15,
+											color: '#4B4C72',
 										}}>
 										{da.title}
 									</Text>

@@ -19,7 +19,6 @@ class Details extends Component {
 		data: this.props.navigation.getParam('data'),
 	}
 	render() {
-		console.log('DETAIL', this.state.data)
 		const {
 			Genre,
 			Status,
@@ -55,20 +54,7 @@ class Details extends Component {
 						/>
 					</Button>
 					<View>
-						<Text
-							style={{
-								textShadowColor: 'rgba(0, 0, 0, 0.75)',
-								textShadowOffset: { width: -1, height: 1 },
-								textShadowRadius: 10,
-								fontSize: 18,
-								color: 'white',
-								marginLeft: 12,
-								fontFamily: 'Poppins-Bold',
-								width: '60%',
-								marginBottom: 9,
-							}}>
-							{title}
-						</Text>
+						<Text style={styles.bigTitle}>{title}</Text>
 						<Text
 							style={{
 								fontSize: 13,
@@ -197,6 +183,17 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		width: Dimensions.get('window').width / 1.3,
 		justifyContent: 'space-between',
+	},
+	bigTitle: {
+		textShadowColor: 'rgba(0, 0, 0, 0.75)',
+		textShadowOffset: { width: -1, height: 1 },
+		textShadowRadius: 10,
+		fontSize: 18,
+		color: 'white',
+		marginLeft: 12,
+		fontFamily: 'Poppins-Bold',
+		width: '60%',
+		marginBottom: 9,
 	},
 })
 

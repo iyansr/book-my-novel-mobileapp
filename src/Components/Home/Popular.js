@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		fontSize: 14,
 		fontFamily: 'Poppins-Bold',
-		color: '#303031',
+		color: '#4B4C72',
 	},
 	imageContainer: {
 		height: 180,

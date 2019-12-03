@@ -10,6 +10,7 @@ import History from './src/Screens/History'
 import Details from './src/Screens/Details'
 import SplashScreen from './src/Screens/SplashScreen'
 import SearchScreen from './src/Screens/Search'
+import Login from './src/Screens/Login'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
@@ -87,7 +88,8 @@ const BottomNavigator = createBottomTabNavigator(
 )
 
 const switchScreen = createSwitchNavigator({
-	Splash: SplashScreen,
+	// Splash: SplashScreen,
+	LoginScreen: Login,
 	App: BottomNavigator,
 })
 
