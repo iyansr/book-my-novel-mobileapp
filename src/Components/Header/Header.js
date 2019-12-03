@@ -14,10 +14,10 @@ class CustomHeader extends Component {
 					<StatusBar barStyle='light-content' backgroundColor='#4a148c' />
 					{showLeft ? (
 						<Left>
-							<Button transparent>
+							<Button transparent onPress={this.props.buttonLeftPress}>
 								<Icon
 									type='FontAwesome'
-									name='bars'
+									name={this.props.leftIcon}
 									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
 								/>
 							</Button>
@@ -29,7 +29,7 @@ class CustomHeader extends Component {
 					</Body>
 					<Right>
 						{showRight ? (
-							<Button transparent>
+							<Button transparent onPress={this.props.buttonRightPress}>
 								<Icon
 									type='FontAwesome'
 									name='shopping-cart'

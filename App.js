@@ -12,12 +12,20 @@ import SplashScreen from './src/Screens/SplashScreen'
 import SearchScreen from './src/Screens/Search'
 import Login from './src/Screens/Login'
 import Register from './src/Screens/Register'
+import BorrowList from './src/Screens/BorrowList'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
 		screen: Home,
-		navigationOptions: () => ({
-			header: () => <CustomHeader title='BookMyNovel' showRight={true} />,
+		navigationOptions: ({ navigation }) => ({
+			header: () => (
+				<CustomHeader
+					leftIcon='bars'
+					title='BookMyNovel'
+					showRight={true}
+					buttonRightPress={() => navigation.navigate('BorrowPage')}
+				/>
+			),
 		}),
 	},
 	Details: {
@@ -28,6 +36,12 @@ const HomeNavigator = createStackNavigator({
 		},
 	},
 	Search: { screen: SearchScreen },
+	BorrowPage: {
+		screen: BorrowList,
+		navigationOptions: {
+			header: null,
+		},
+	},
 })
 
 const BottomNavigator = createBottomTabNavigator(
