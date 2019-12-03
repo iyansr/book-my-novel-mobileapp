@@ -11,14 +11,8 @@ import {
 	Text,
 	Icon,
 } from 'native-base'
-import {
-	View,
-	TextInput,
-	ScrollView,
-	StatusBar,
-	TouchableHighlight,
-} from 'react-native'
-class Login extends Component {
+import { View, TextInput, ScrollView, StatusBar } from 'react-native'
+class Register extends Component {
 	render() {
 		return (
 			<View
@@ -37,7 +31,7 @@ class Login extends Component {
 							fontFamily: 'Poppins-Bold',
 							color: '#4B4C72',
 						}}>
-						Here To Get
+						Welcome
 					</Text>
 					<Text
 						style={{
@@ -45,11 +39,16 @@ class Login extends Component {
 							fontFamily: 'Poppins-Bold',
 							color: '#4B4C72',
 						}}>
-						Welcomed !
+						New User !
 					</Text>
 				</View>
 				<View style={{ marginTop: -20 }}>
 					<Form>
+						<Item floatingLabel style={{ marginLeft: 0 }}>
+							<Label style={{ fontFamily: 'Poppins-Regular' }}>Name</Label>
+							<Input />
+						</Item>
+						{/* <Text>asd</Text> */}
 						<Item floatingLabel style={{ marginLeft: 0 }}>
 							<Label style={{ fontFamily: 'Poppins-Regular' }}>Email</Label>
 							<Input />
@@ -74,10 +73,10 @@ class Login extends Component {
 							marginTop: 16,
 							color: '#4B4C72',
 						}}>
-						Sign In
+						Sign Up
 					</Text>
 					<Button
-						// onPress={() => this.props.navigation.navigate('App')}
+						onPress={() => this.props.navigation.navigate('App')}
 						rounded
 						style={{
 							height: 54,
@@ -94,23 +93,21 @@ class Login extends Component {
 						flexDirection: 'row',
 						justifyContent: 'space-between',
 					}}>
-					<View>
-						<Text
-							onPress={() => this.props.navigation.replace('Register')}
-							style={{
-								fontSize: 13,
-								fontFamily: 'Poppins-Regular',
-								marginTop: 16,
-								color: '#4B4C72',
-								textDecorationLine: 'underline',
-							}}>
-							Sign Up
-						</Text>
-					</View>
+					<Text
+						onPress={() => this.props.navigation.replace('Login')}
+						style={{
+							fontSize: 13,
+							fontFamily: 'Poppins-Regular',
+							marginTop: 16,
+							color: '#4B4C72',
+							textDecorationLine: 'underline',
+						}}>
+						Sign In
+					</Text>
 				</View>
 			</View>
 		)
 	}
 }
 
-export default Login
+export default Register

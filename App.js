@@ -11,6 +11,7 @@ import Details from './src/Screens/Details'
 import SplashScreen from './src/Screens/SplashScreen'
 import SearchScreen from './src/Screens/Search'
 import Login from './src/Screens/Login'
+import Register from './src/Screens/Register'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
@@ -87,9 +88,26 @@ const BottomNavigator = createBottomTabNavigator(
 	}
 )
 
+const AuthNavigator = createStackNavigator({
+	Login: {
+		screen: Login,
+		navigationOptions: {
+			tabBarVisible: false,
+			header: null,
+		},
+	},
+	Register: {
+		screen: Register,
+		navigationOptions: {
+			tabBarVisible: false,
+			header: null,
+		},
+	},
+})
+
 const switchScreen = createSwitchNavigator({
-	// Splash: SplashScreen,
-	LoginScreen: Login,
+	Splash: SplashScreen,
+	AuthScreen: AuthNavigator,
 	App: BottomNavigator,
 })
 
