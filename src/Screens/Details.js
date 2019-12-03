@@ -36,7 +36,7 @@ class Details extends Component {
 			weight,
 		} = this.state.data
 		return (
-			<ScrollView>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<ImageBackground
 					source={{ uri: image }}
 					style={{

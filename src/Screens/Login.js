@@ -1,4 +1,7 @@
+import Axios from 'axios'
 import React, { Component } from 'react'
+import AsyncStorage from '@react-native-community/async-storage'
+
 import {
 	Container,
 	Header,
@@ -17,8 +20,77 @@ import {
 	ScrollView,
 	StatusBar,
 	TouchableHighlight,
+	ActivityIndicator,
+	Keyboard,
 } from 'react-native'
 class Login extends Component {
+	constructor() {
+		super()
+		this._isMounted = false
+		this.state = {
+			email: '',
+			password: '',
+			isLoading: false,
+			error: {
+				error: false,
+				message: {
+					email: '',
+					password: '',
+				},
+			},
+		}
+	}
+
+	componentDidMount() {
+		this._isMounted = true
+	}
+
+	async loginUser() {
+		this._isMounted && this.setState({ isLoading: true })
+		this._isMounted && Keyboard.dismiss()
+
+		if (this._isMounted) {
+			try {
+				console.log({
+					email: this.state.email,
+					password: this.state.password,
+				})
+				const formData = new FormData()
+				formData.append('email', this.state.email)
+				formData.append('password', this.state.password)
+
+				const result = await Axios.post(
+					'https://stormy-eyrie-12807.herokuapp.com/api/v2/users/login',
+					formData
+				)
+				await AsyncStorage.setItem('userToken', result.data)
+				this.props.navigation.navigate('App')
+				this.setState({ isLoading: false })
+			} catch (error) {
+				this.setState({
+					error: error.response.data,
+					isLoading: false,
+				})
+			}
+		} else null
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false
+		this.setState({
+			email: '',
+			password: '',
+			isLoading: false,
+			error: {
+				error: false,
+				message: {
+					email: '',
+					password: '',
+				},
+			},
+		})
+	}
+
 	render() {
 		return (
 			<View
@@ -52,13 +124,38 @@ class Login extends Component {
 					<Form>
 						<Item floatingLabel style={{ marginLeft: 0 }}>
 							<Label style={{ fontFamily: 'Poppins-Regular' }}>Email</Label>
-							<Input />
+							<Input
+								autoCapitalize='none'
+								onChangeText={
+									this._isMounted
+										? email => this.setState({ email })
+										: () => null
+								}
+								keyboardType='email-address'
+							/>
 						</Item>
-						{/* <Text>asd</Text> */}
+						{this.state.error.error ? (
+							<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
+								{this.state.error.message.email}
+							</Text>
+						) : null}
+
 						<Item floatingLabel style={{ marginLeft: 0 }}>
 							<Label style={{ fontFamily: 'Poppins-Regular' }}>Password</Label>
-							<Input />
+							<Input
+								secureTextEntry={true}
+								onChangeText={
+									this._isMounted
+										? password => this.setState({ password })
+										: () => null
+								}
+							/>
 						</Item>
+						{this.state.error.error ? (
+							<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
+								{this.state.error.message.password}
+							</Text>
+						) : null}
 					</Form>
 				</View>
 				<View
@@ -78,14 +175,24 @@ class Login extends Component {
 					</Text>
 					<Button
 						// onPress={() => this.props.navigation.navigate('App')}
+						onPress={this.loginUser.bind(this)}
+						disabled={this.state.isLoading}
 						rounded
 						style={{
 							height: 54,
 							width: 54,
-							paddingLeft: 4,
+							paddingLeft: 8,
 							backgroundColor: '#4B4C72',
 						}}>
-						<Icon type='FontAwesome' name='chevron-right' />
+						{this.state.isLoading ? (
+							<ActivityIndicator size='large' color='#fff' />
+						) : (
+							<Icon
+								style={{ marginLeft: 12 }}
+								type='FontAwesome'
+								name='chevron-right'
+							/>
+						)}
 					</Button>
 				</View>
 				<View

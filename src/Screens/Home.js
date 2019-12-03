@@ -8,11 +8,15 @@ import Axios from 'axios'
 import BottomHeader from '../Components/Header/BottomHeader'
 
 class Home extends Component {
-	state = {
-		genres: ['Fantasy', 'Action', 'Romance'],
-		data: [],
-		dataPopular: [],
-		isLoading: true,
+	constructor() {
+		super()
+		this._isMounted = false
+		this.state = {
+			genres: ['Fantasy', 'Action', 'Romance'],
+			data: [],
+			dataPopular: [],
+			isLoading: true,
+		}
 	}
 
 	getAllNovel = async () => {
@@ -20,10 +24,11 @@ class Home extends Component {
 			const response = await Axios.get(
 				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=100&page=1'
 			)
-			this.setState({
-				data: response.data.result,
-				isLoading: false,
-			})
+			this._isMounted &&
+				this.setState({
+					data: response.data.result,
+					isLoading: false,
+				})
 		} catch (error) {
 			console.log(error)
 		}
@@ -33,17 +38,22 @@ class Home extends Component {
 			const response = await Axios.get(
 				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=4&page=2'
 			)
-			this.setState({
-				dataPopular: response.data.result,
-				isLoading: false,
-			})
+			this._isMounted &&
+				this.setState({
+					dataPopular: response.data.result,
+					isLoading: false,
+				})
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	componentDidMount = () => {
-		this.getAllNovel()
-		this.getPopularNovel()
+		this._isMounted = true
+		this._isMounted && this.getAllNovel()
+		this._isMounted && this.getPopularNovel()
+	}
+	componentWillUnmount() {
+		this._isMounted = false
 	}
 
 	render() {
