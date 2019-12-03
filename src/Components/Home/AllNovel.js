@@ -27,7 +27,7 @@ export class AllNovel extends Component {
 							<View style={mainContainer}>
 								<View style={imageContainer}>
 									<TouchableHighlight
-										style={{ borderRadius: 5 }}
+										style={{ borderRadius: 5, backgroundColor: 'white' }}
 										onPress={() => this.props.onPress({ ...da })}>
 										<Image
 											style={image}

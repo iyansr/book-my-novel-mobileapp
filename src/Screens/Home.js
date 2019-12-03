@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text } from 'react-native'
+import { View, ScrollView, ActivityIndicator } from 'react-native'
 import Genre from '../Components/Home/Genre'
 import SectionTitle from '../Components/Home/SectionTitle'
 import Popular from '../Components/Home/Popular'
@@ -11,6 +11,8 @@ class Home extends Component {
 	constructor() {
 		super()
 		this._isMounted = false
+		this.CancelToken = Axios.CancelToken
+		this.source = this.CancelToken.source()
 		this.state = {
 			genres: ['Fantasy', 'Action', 'Romance'],
 			data: [],
@@ -36,7 +38,8 @@ class Home extends Component {
 	getPopularNovel = async () => {
 		try {
 			const response = await Axios.get(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=4&page=2'
+				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=4&page=2',
+				{ cancelToken: this.source.token }
 			)
 			this._isMounted &&
 				this.setState({
@@ -54,6 +57,7 @@ class Home extends Component {
 	}
 	componentWillUnmount() {
 		this._isMounted = false
+		this.source.cancel()
 	}
 
 	render() {
@@ -61,7 +65,14 @@ class Home extends Component {
 			return (
 				<>
 					<BottomHeader />
-					<Text>Loading...</Text>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}>
+						<ActivityIndicator size='large' color='#4a148c' />
+					</View>
 				</>
 			)
 		}

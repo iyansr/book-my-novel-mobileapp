@@ -27,6 +27,8 @@ class Login extends Component {
 	constructor() {
 		super()
 		this._isMounted = false
+		this.CancelToken = Axios.CancelToken
+		this.source = this.CancelToken.source()
 		this.state = {
 			email: '',
 			password: '',
@@ -61,7 +63,8 @@ class Login extends Component {
 
 				const result = await Axios.post(
 					'https://stormy-eyrie-12807.herokuapp.com/api/v2/users/login',
-					formData
+					formData,
+					{ cancelToken: this.source.token }
 				)
 				await AsyncStorage.setItem('userToken', result.data)
 				this.props.navigation.navigate('App')
@@ -75,139 +78,137 @@ class Login extends Component {
 		} else null
 	}
 
+	onSubmit() {
+		this._isMounted && this.loginUser()
+	}
+
 	componentWillUnmount() {
 		this._isMounted = false
-		this.setState({
-			email: '',
-			password: '',
-			isLoading: false,
-			error: {
-				error: false,
-				message: {
-					email: '',
-					password: '',
-				},
-			},
-		})
+		this.source.cancel()
 	}
 
 	render() {
 		return (
-			<View
-				style={{
-					alignSelf: 'center',
-					width: '87%',
-					justifyContent: 'center',
-					flexDirection: 'column',
-					flex: 1,
-				}}>
-				<StatusBar barStyle='dark-content' backgroundColor='white' />
-				<View style={{ marginBottom: 30 }}>
-					<Text
-						style={{
-							fontSize: 24,
-							fontFamily: 'Poppins-Bold',
-							color: '#4B4C72',
-						}}>
-						Here To Get
-					</Text>
-					<Text
-						style={{
-							fontSize: 24,
-							fontFamily: 'Poppins-Bold',
-							color: '#4B4C72',
-						}}>
-						Welcomed !
-					</Text>
-				</View>
-				<View style={{ marginTop: -20 }}>
-					<Form>
-						<Item floatingLabel style={{ marginLeft: 0 }}>
-							<Label style={{ fontFamily: 'Poppins-Regular' }}>Email</Label>
-							<Input
-								autoCapitalize='none'
-								onChangeText={email => this.setState({ email })}
-								keyboardType='email-address'
-							/>
-						</Item>
-						{this.state.error.error ? (
-							<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
-								{this.state.error.message.email}
-							</Text>
-						) : null}
-
-						<Item floatingLabel style={{ marginLeft: 0 }}>
-							<Label style={{ fontFamily: 'Poppins-Regular' }}>Password</Label>
-							<Input
-								secureTextEntry={true}
-								onChangeText={password => this.setState({ password })}
-							/>
-						</Item>
-						{this.state.error.error ? (
-							<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
-								{this.state.error.message.password}
-							</Text>
-						) : null}
-					</Form>
-				</View>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<View
 					style={{
-						marginTop: 80,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
+						alignSelf: 'center',
+						width: '87%',
+						justifyContent: 'center',
+						flexDirection: 'column',
+						flex: 1,
+						marginTop: 100,
 					}}>
-					<Text
-						style={{
-							fontSize: 18,
-							fontFamily: 'Poppins-Bold',
-							marginTop: 16,
-							color: '#4B4C72',
-						}}>
-						Sign In
-					</Text>
-					<Button
-						// onPress={() => this.props.navigation.navigate('App')}
-						onPress={this.loginUser.bind(this)}
-						disabled={this.state.isLoading}
-						rounded
-						style={{
-							height: 54,
-							width: 54,
-							paddingLeft: 8,
-							backgroundColor: '#4B4C72',
-						}}>
-						{this.state.isLoading ? (
-							<ActivityIndicator size='large' color='#fff' />
-						) : (
-							<Icon
-								style={{ marginLeft: 12 }}
-								type='FontAwesome'
-								name='chevron-right'
-							/>
-						)}
-					</Button>
-				</View>
-				<View
-					style={{
-						marginTop: 60,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-					}}>
-					<View>
+					<StatusBar barStyle='dark-content' backgroundColor='white' />
+					<View style={{ marginBottom: 30 }}>
 						<Text
-							onPress={() => this.props.navigation.replace('Register')}
 							style={{
-								fontSize: 13,
-								fontFamily: 'Poppins-Regular',
-								marginTop: 16,
+								fontSize: 24,
+								fontFamily: 'Poppins-Bold',
 								color: '#4B4C72',
-								textDecorationLine: 'underline',
 							}}>
-							Sign Up
+							Here To Get
+						</Text>
+						<Text
+							style={{
+								fontSize: 24,
+								fontFamily: 'Poppins-Bold',
+								color: '#4B4C72',
+							}}>
+							Welcomed !
 						</Text>
 					</View>
+					<View style={{ marginTop: -20 }}>
+						<Form>
+							<Item floatingLabel style={{ marginLeft: 0 }}>
+								<Label style={{ fontFamily: 'Poppins-Regular' }}>Email</Label>
+								<Input
+									autoCapitalize='none'
+									onChangeText={email => this.setState({ email })}
+									keyboardType='email-address'
+								/>
+							</Item>
+							{this.state.error.error ? (
+								<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
+									{this.state.error.message.email}
+								</Text>
+							) : null}
+
+							<Item floatingLabel style={{ marginLeft: 0 }}>
+								<Label style={{ fontFamily: 'Poppins-Regular' }}>
+									Password
+								</Label>
+								<Input
+									autoCapitalize='none'
+									secureTextEntry={true}
+									onChangeText={password => this.setState({ password })}
+								/>
+							</Item>
+							{this.state.error.error ? (
+								<Text style={{ fontSize: 13, marginTop: 3, color: 'red' }}>
+									{this.state.error.message.password}
+								</Text>
+							) : null}
+						</Form>
+					</View>
+					<View
+						style={{
+							marginTop: 80,
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+						}}>
+						<Text
+							style={{
+								fontSize: 18,
+								fontFamily: 'Poppins-Bold',
+								marginTop: 16,
+								color: '#4B4C72',
+							}}>
+							Sign In
+						</Text>
+						<Button
+							onPress={this.onSubmit.bind(this)}
+							disabled={this.state.isLoading}
+							rounded
+							style={{
+								height: 54,
+								width: 54,
+								paddingLeft: 8,
+								backgroundColor: '#4B4C72',
+							}}>
+							{this.state.isLoading ? (
+								<ActivityIndicator size='large' color='#fff' />
+							) : (
+								<Icon
+									style={{ marginLeft: 12, color: 'white' }}
+									type='FontAwesome'
+									name='chevron-right'
+								/>
+							)}
+						</Button>
+					</View>
+					<View
+						style={{
+							marginTop: 60,
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+						}}>
+						<View>
+							<Text
+								onPress={() => this.props.navigation.replace('Register')}
+								style={{
+									fontSize: 13,
+									fontFamily: 'Poppins-Regular',
+									marginTop: -15,
+									color: '#4B4C72',
+									textDecorationLine: 'underline',
+								}}>
+								Sign Up
+							</Text>
+						</View>
+					</View>
 				</View>
-			</View>
+			</ScrollView>
 		)
 	}
 }
