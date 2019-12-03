@@ -31,8 +31,8 @@ class CustomHeader extends Component {
 						{showRight ? (
 							<Button transparent onPress={this.props.buttonRightPress}>
 								<Icon
-									type='FontAwesome'
-									name='shopping-cart'
+									type='FontAwesome5'
+									name={this.props.rightIcon}
 									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
 								/>
 							</Button>

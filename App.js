@@ -23,6 +23,7 @@ const HomeNavigator = createStackNavigator({
 					leftIcon='bars'
 					title='BookMyNovel'
 					showRight={true}
+					rightIcon='book'
 					buttonRightPress={() => navigation.navigate('BorrowPage')}
 				/>
 			),
@@ -35,7 +36,12 @@ const HomeNavigator = createStackNavigator({
 			header: null,
 		},
 	},
-	Search: { screen: SearchScreen },
+	Search: {
+		screen: SearchScreen,
+		navigationOptions: {
+			header: null,
+		},
+	},
 	BorrowPage: {
 		screen: BorrowList,
 		navigationOptions: {
@@ -52,7 +58,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'Explore',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='compass'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
@@ -65,7 +71,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'History',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='history'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
@@ -78,7 +84,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='user'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>

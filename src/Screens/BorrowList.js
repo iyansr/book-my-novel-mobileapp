@@ -10,6 +10,10 @@ class BorrowList extends Component {
 			isEmpty: true,
 		}
 	}
+	async componentDidMount() {
+		try {
+		} catch (error) {}
+	}
 	render() {
 		return this.state.isEmpty ? (
 			<>
@@ -18,6 +22,8 @@ class BorrowList extends Component {
 					leftIcon='chevron-left'
 					showLeft={true}
 					title='Borrow List'
+					showRight={true}
+					rightIcon='sync-alt'
 				/>
 				<View
 					style={{
