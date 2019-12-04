@@ -6,11 +6,12 @@ import Popular from '../Components/Home/Popular'
 import AllNovel from '../Components/Home/AllNovel'
 import Axios from 'axios'
 import BottomHeader from '../Components/Header/BottomHeader'
+import { connect } from 'react-redux'
+import { getAllNovels } from '../Redux/Actions/novel'
 
 class Home extends Component {
 	constructor() {
 		super()
-		this._isMounted = false
 		this.CancelToken = Axios.CancelToken
 		this.source = this.CancelToken.source()
 		this.state = {
@@ -23,40 +24,31 @@ class Home extends Component {
 
 	getAllNovel = async () => {
 		try {
-			const response = await Axios.get(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=100&page=1'
-			)
-			this._isMounted &&
-				this.setState({
-					data: response.data.result,
-					isLoading: false,
-				})
+			await this.props.dispatch(getAllNovels(''))
+			this.setState({
+				data: this.props.novels.novelData,
+				isLoading: false,
+			})
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	getPopularNovel = async () => {
 		try {
-			const response = await Axios.get(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=4&page=2',
-				{ cancelToken: this.source.token }
-			)
-			this._isMounted &&
-				this.setState({
-					dataPopular: response.data.result,
-					isLoading: false,
-				})
+			await this.props.dispatch(getAllNovels('?limit=4&page=2'))
+			this.setState({
+				dataPopular: this.props.novels.novelData,
+				isLoading: false,
+			})
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	componentDidMount = () => {
-		this._isMounted = true
-		this._isMounted && this.getAllNovel()
-		this._isMounted && this.getPopularNovel()
+		this.getAllNovel()
+		this.getPopularNovel()
 	}
 	componentWillUnmount() {
-		this._isMounted = false
 		this.source.cancel()
 	}
 
@@ -115,4 +107,10 @@ class Home extends Component {
 	}
 }
 
-export default Home
+const mapStateToProps = state => {
+	return {
+		novels: state.novels,
+	}
+}
+
+export default connect(mapStateToProps)(Home)

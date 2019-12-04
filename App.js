@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
@@ -13,6 +13,8 @@ import SearchScreen from './src/Screens/Search'
 import Login from './src/Screens/Login'
 import Register from './src/Screens/Register'
 import BorrowList from './src/Screens/BorrowList'
+import { Provider } from 'react-redux'
+import store from './src/Redux/store'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
@@ -130,5 +132,16 @@ const switchScreen = createSwitchNavigator({
 	AuthScreen: AuthNavigator,
 	App: BottomNavigator,
 })
+const AppContainer = createAppContainer(switchScreen)
 
-export default createAppContainer(switchScreen)
+export class App extends Component {
+	render() {
+		return (
+			<Provider store={store}>
+				<AppContainer />
+			</Provider>
+		)
+	}
+}
+
+export default App

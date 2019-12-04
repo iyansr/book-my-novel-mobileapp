@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { registerUser } from '../Redux/Actions/user'
 import {
 	Container,
 	Header,
@@ -17,6 +19,7 @@ import {
 	ScrollView,
 	StatusBar,
 	ActivityIndicator,
+	Alert,
 } from 'react-native'
 import Axios from 'axios'
 class Register extends Component {
@@ -52,29 +55,31 @@ class Register extends Component {
 		this.source.cancel()
 	}
 
-	async registerUser() {
+	async goRegister() {
 		this.setState({ isLoading: true })
 		try {
 			const formData = new FormData()
 			formData.append('email', this.state.email)
 			formData.append('name', this.state.name)
 			formData.append('password', this.state.password)
-			const response = await Axios.post(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/users/register',
-				formData,
-				{ cancelToken: this.source.token }
-			)
-			this.props.navigation.replace('Login')
+			await this.props.dispatch(registerUser(formData))
+			// this.props.navigation.replace('Login')
+			this.setState({
+				isLoading: false,
+			})
+			Alert.alert('Succes Register', 'You can login now', [
+				{ text: 'OK', onPress: () => this.props.navigation.replace('Login') },
+			])
 		} catch (error) {
 			this.setState({
-				error: error.response.data,
+				error: this.props.user.error,
 				isLoading: false,
 			})
 		}
 	}
 
 	onSubmit() {
-		this._isMount && this.registerUser()
+		this._isMount && this.goRegister()
 	}
 	render() {
 		return (
@@ -213,5 +218,10 @@ class Register extends Component {
 		)
 	}
 }
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+	}
+}
 
-export default Register
+export default connect(mapStateToProps)(Register)
