@@ -26,6 +26,7 @@ class Register extends Component {
 		this.source = this.CancelToken.source()
 		this._isMount = false
 		this.state = {
+			isSecure: true,
 			name: '',
 			email: '',
 			password: '',
@@ -135,8 +136,16 @@ class Register extends Component {
 								</Label>
 								<Input
 									autoCapitalize='none'
-									secureTextEntry={true}
+									secureTextEntry={this.state.isSecure}
 									onChangeText={password => this.setState({ password })}
+								/>
+								<Icon
+									onPress={() =>
+										this.setState({ isSecure: !this.state.isSecure })
+									}
+									type='FontAwesome5'
+									name={this.state.isSecure ? 'eye-slash' : 'eye'}
+									style={{ fontSize: 18, color: '#4B4C72' }}
 								/>
 							</Item>
 							{this.state.error.error ? (
@@ -183,7 +192,7 @@ class Register extends Component {
 					</View>
 					<View
 						style={{
-							marginTop: 60,
+							marginTop: 40,
 							flexDirection: 'row',
 							justifyContent: 'space-between',
 						}}>
