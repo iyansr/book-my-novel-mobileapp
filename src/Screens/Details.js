@@ -7,6 +7,7 @@ import {
 	ImageBackground,
 	Dimensions,
 	StyleSheet,
+	ActivityIndicator,
 } from 'react-native'
 import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -15,8 +16,21 @@ class Details extends Component {
 		tabBarVisible: false,
 		header: null,
 	}
-	state = {
-		data: this.props.navigation.getParam('data'),
+
+	constructor() {
+		super()
+		this.state = {
+			data: {},
+			isLoading: true,
+			isBorrowed: false,
+		}
+	}
+
+	componentDidMount() {
+		this.setState({
+			isLoading: false,
+			data: this.props.navigation.getParam('data'),
+		})
 	}
 	render() {
 		const {
@@ -46,7 +60,10 @@ class Details extends Component {
 						flexDirection: 'column',
 						justifyContent: 'space-between',
 					}}>
-					<Button transparent onPress={() => this.props.navigation.goBack()}>
+					<Button
+						transparent
+						style={{ width: 60 }}
+						onPress={() => this.props.navigation.goBack()}>
 						<Icon
 							type='FontAwesome'
 							name='chevron-left'
@@ -153,19 +170,38 @@ class Details extends Component {
 						paddingHorizontal: 80,
 						paddingVertical: 20,
 					}}>
-					<Button
-						style={{
-							borderRadius: 50,
-							alignContent: 'center',
-							alignItems: 'center',
-							justifyContent: 'center',
-							backgroundColor: '#4a148c',
-							elevation: 8,
-						}}>
-						<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
-							Borrow
-						</Text>
-					</Button>
+					{this.state.isLoading ? (
+						<ActivityIndicator size='small' color='#4a148c' />
+					) : Status === 'Available' ? (
+						<Button
+							style={{
+								borderRadius: 50,
+								alignContent: 'center',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#4a148c',
+								elevation: 8,
+							}}>
+							<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
+								Borrow
+							</Text>
+						</Button>
+					) : (
+						<Button
+							disabled
+							style={{
+								borderRadius: 50,
+								alignContent: 'center',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#dedede',
+								elevation: 0,
+							}}>
+							<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
+								Novel Is Empty
+							</Text>
+						</Button>
+					)}
 				</View>
 			</ScrollView>
 		)
@@ -193,7 +229,7 @@ const styles = StyleSheet.create({
 		marginLeft: 12,
 		fontFamily: 'Poppins-Bold',
 		width: '60%',
-		marginBottom: 9,
+		marginBottom: 0,
 	},
 })
 

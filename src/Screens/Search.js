@@ -1,13 +1,33 @@
 import React, { Component } from 'react'
 import { Container } from 'native-base'
-import { Text, View, Image, StyleSheet, ScrollView } from 'react-native'
+import {
+	Text,
+	View,
+	Image,
+	StyleSheet,
+	ScrollView,
+	Keyboard,
+} from 'react-native'
 import SearchBar from '../Components/Header/SearchBar'
 
 class SearchScreen extends Component {
+	constructor() {
+		super()
+		this.state = {
+			searchVal: '',
+		}
+	}
+	onSearch() {
+		console.log(this.state.searchVal)
+		Keyboard.dismiss()
+	}
 	render() {
 		return (
 			<>
-				<SearchBar />
+				<SearchBar
+					onChange={search => this.setState({ searchVal: search })}
+					onSearch={this.onSearch.bind(this)}
+				/>
 				<ScrollView>
 					<View
 						style={{

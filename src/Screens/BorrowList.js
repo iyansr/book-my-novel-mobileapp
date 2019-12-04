@@ -60,8 +60,6 @@ class BorrowList extends Component {
 						leftIcon='chevron-left'
 						showLeft={true}
 						title='Borrow List'
-						showRight={true}
-						rightIcon='sync-alt'
 					/>
 					<View
 						style={{
@@ -123,8 +121,6 @@ class BorrowList extends Component {
 						leftIcon='chevron-left'
 						showLeft={true}
 						title='Borrow List'
-						showRight={true}
-						rightIcon='sync-alt'
 					/>
 					<ScrollView
 						contentContainerStyle={{ padding: 12 }}
