@@ -1,19 +1,16 @@
 import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 const FIVE_SECONDS = 3000
 
 export default class SplashScreen extends React.Component {
-	componentDidMount() {
-		// When mounted, wait one second, then navigate to App
-		setTimeout(() => {
-			// Components that are placed inside a React Navigation
-			// navigator will receive the `navigation` prop.
-			// It's main usage is to trigger navigation events.
-			// Right here we're telling it to navigate to the route
-			// with the name 'App'.
+	async componentDidMount() {
+		if (await AsyncStorage.getItem('userToken')) {
 			this.props.navigation.navigate('App')
-		}, FIVE_SECONDS)
+		} else {
+			this.props.navigation.navigate('AuthScreen')
+		}
 	}
 
 	render() {

@@ -1,13 +1,28 @@
 import React, { Component } from 'react'
-import { Container } from 'native-base'
-import { Text } from 'react-native'
+import { Container, Button } from 'native-base'
+import AsyncStorage from '@react-native-community/async-storage'
+import { Text, View, ScrollView } from 'react-native'
+import CustomHeader from '../Components/Header/Header'
 
 class Profile extends Component {
 	render() {
 		return (
-			<Container>
-				<Text>Ini Profile</Text>
-			</Container>
+			<View>
+				<ScrollView>
+					<CustomHeader title='Profile' />
+					<Button
+						onPress={async () => {
+							try {
+								await AsyncStorage.removeItem('userToken')
+								this.props.navigation.navigate('AuthScreen')
+							} catch (error) {
+								console.log(error)
+							}
+						}}>
+						<Text>Log Out</Text>
+					</Button>
+				</ScrollView>
+			</View>
 		)
 	}
 }

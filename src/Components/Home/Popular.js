@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, Image, Text, StyleSheet, ScrollView } from 'react-native'
+import {
+	View,
+	Image,
+	Text,
+	StyleSheet,
+	ScrollView,
+	TouchableHighlight,
+} from 'react-native'
 import StarRating from 'react-native-star-rating'
 
 export class Popular extends Component {
@@ -16,9 +23,11 @@ export class Popular extends Component {
 				{this.props.data.map((da, index) => {
 					return (
 						<View key={index}>
-							<View style={imageContainer}>
+							<TouchableHighlight
+								style={imageContainer}
+								onPress={() => this.props.onPress({ ...da })}>
 								<Image style={mainImage} source={{ uri: da.image }} />
-							</View>
+							</TouchableHighlight>
 							<Text numberOfLines={1} ellipsizeMode={'tail'} style={authorText}>
 								{da.author}
 							</Text>
@@ -49,7 +58,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5,
 		fontSize: 14,
 		fontFamily: 'Poppins-Bold',
-		color: '#303031',
+		color: '#4B4C72',
 	},
 	imageContainer: {
 		height: 180,

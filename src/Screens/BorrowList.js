@@ -3,17 +3,28 @@ import { Header, Container, Title, Body } from 'native-base'
 import { Text, View, ScrollView, Image, StyleSheet } from 'react-native'
 import CustomHeader from '../Components/Header/Header'
 
-class History extends Component {
+class BorrowList extends Component {
 	constructor() {
 		super()
 		this.state = {
 			isEmpty: true,
 		}
 	}
+	async componentDidMount() {
+		try {
+		} catch (error) {}
+	}
 	render() {
 		return this.state.isEmpty ? (
 			<>
-				<CustomHeader title='History' />
+				<CustomHeader
+					buttonLeftPress={() => this.props.navigation.goBack()}
+					leftIcon='chevron-left'
+					showLeft={true}
+					title='Borrow List'
+					showRight={true}
+					rightIcon='sync-alt'
+				/>
 				<View
 					style={{
 						flex: 1,
@@ -70,4 +81,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default History
+export default BorrowList

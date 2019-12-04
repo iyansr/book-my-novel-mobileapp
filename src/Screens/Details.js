@@ -1,15 +1,46 @@
 import React, { Component } from 'react'
-import { View, Text, StatusBar, Image, ImageBackground } from 'react-native'
-import { Button, Icon } from 'native-base'
+import {
+	View,
+	Text,
+	StatusBar,
+	Image,
+	ImageBackground,
+	Dimensions,
+	StyleSheet,
+} from 'react-native'
+import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
 class Details extends Component {
+	static navigationOptions = {
+		tabBarVisible: false,
+		header: null,
+	}
+	state = {
+		data: this.props.navigation.getParam('data'),
+	}
 	render() {
+		const {
+			Genre,
+			Status,
+			author,
+			createdAt,
+			description,
+			height,
+			image,
+			isbn,
+			length,
+			novel_id,
+			pages,
+			title,
+			vendor,
+			weight,
+		} = this.state.data
 		return (
-			<ScrollView>
-				<StatusBar backgroundColor='#4a148c' />
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<ImageBackground
-					source={{ uri: this.props.navigation.getParam('image', '0') }}
+					source={{ uri: image }}
 					style={{
+						backgroundColor: 'black',
 						width: '100%',
 						height: 250,
 						flexDirection: 'column',
@@ -23,20 +54,7 @@ class Details extends Component {
 						/>
 					</Button>
 					<View>
-						<Text
-							style={{
-								textShadowColor: 'rgba(0, 0, 0, 0.75)',
-								textShadowOffset: { width: -1, height: 1 },
-								textShadowRadius: 10,
-								fontSize: 18,
-								color: 'white',
-								marginLeft: 12,
-								fontFamily: 'Poppins-Bold',
-								width: '60%',
-								marginBottom: 9,
-							}}>
-							{this.props.navigation.getParam('title', '0')}
-						</Text>
+						<Text style={styles.bigTitle}>{title}</Text>
 						<Text
 							style={{
 								fontSize: 13,
@@ -45,7 +63,7 @@ class Details extends Component {
 								fontFamily: 'Poppins-Bold',
 								width: '60%',
 							}}>
-							{this.props.navigation.getParam('author', '0')}
+							{author}
 						</Text>
 					</View>
 				</ImageBackground>
@@ -65,7 +83,7 @@ class Details extends Component {
 							justifyContent: 'flex-end',
 						}}>
 						<Image
-							source={{ uri: this.props.navigation.getParam('image', '0') }}
+							source={{ uri: image }}
 							style={{
 								height: 150,
 								width: 100,
@@ -75,14 +93,108 @@ class Details extends Component {
 						/>
 					</View>
 				</View>
-				<View style={{ paddingLeft: 20, paddingRight: 20 }}>
-					<Text style={{ fontFamily: 'Poppins-Regular' }}>
-						{this.props.navigation.getParam('description', '0')}
+				<View style={{ paddingLeft: 20, paddingRight: 20, marginBottom: 15 }}>
+					<Text
+						style={{
+							fontFamily: 'Poppins-Regular',
+							textAlign: 'justify',
+							lineHeight: 16,
+						}}>
+						{description}
 					</Text>
+				</View>
+				<View
+					style={{
+						justifyContent: 'center',
+						alignContent: 'center',
+						alignItems: 'center',
+						alignSelf: 'center',
+					}}>
+					<View
+						style={[
+							styles.detailContainer,
+							{ borderBottomWidth: 1, borderBottomColor: '#757575' },
+						]}>
+						<Text style={[styles.boldFont, { fontSize: 18 }]}>Details : </Text>
+					</View>
+
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Published</Text>
+						<Text>{createdAt}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Pages</Text>
+						<Text>{pages}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>ISBN</Text>
+						<Text>{isbn}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Publisher</Text>
+						<Text>{vendor}</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Weight</Text>
+						<Text>{weight} Kg</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Height</Text>
+						<Text>{height} Kg</Text>
+					</View>
+					<View style={styles.detailContainer}>
+						<Text style={styles.boldFont}>Length</Text>
+						<Text>{length} Kg</Text>
+					</View>
+				</View>
+
+				<View
+					style={{
+						paddingHorizontal: 80,
+						paddingVertical: 20,
+					}}>
+					<Button
+						style={{
+							borderRadius: 50,
+							alignContent: 'center',
+							alignItems: 'center',
+							justifyContent: 'center',
+							backgroundColor: '#4a148c',
+							elevation: 8,
+						}}>
+						<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
+							Borrow
+						</Text>
+					</Button>
 				</View>
 			</ScrollView>
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	boldFont: {
+		fontFamily: 'Poppins-Bold',
+	},
+	detailContainer: {
+		alignItems: 'center',
+		alignContent: 'center',
+		flexDirection: 'row',
+		marginTop: 5,
+		width: Dimensions.get('window').width / 1.3,
+		justifyContent: 'space-between',
+	},
+	bigTitle: {
+		textShadowColor: 'rgba(0, 0, 0, 0.75)',
+		textShadowOffset: { width: -1, height: 1 },
+		textShadowRadius: 10,
+		fontSize: 18,
+		color: 'white',
+		marginLeft: 12,
+		fontFamily: 'Poppins-Bold',
+		width: '60%',
+		marginBottom: 9,
+	},
+})
 
 export default Details

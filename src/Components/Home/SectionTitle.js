@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		fontSize: 18,
 		fontFamily: 'Poppins-Bold',
+		color: '#4B4C72',
 	},
 	link: {
 		flex: 1,

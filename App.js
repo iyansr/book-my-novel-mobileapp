@@ -10,21 +10,44 @@ import History from './src/Screens/History'
 import Details from './src/Screens/Details'
 import SplashScreen from './src/Screens/SplashScreen'
 import SearchScreen from './src/Screens/Search'
+import Login from './src/Screens/Login'
+import Register from './src/Screens/Register'
+import BorrowList from './src/Screens/BorrowList'
 
 const HomeNavigator = createStackNavigator({
 	Home: {
 		screen: Home,
-		navigationOptions: () => ({
-			header: () => <CustomHeader title='BookMyNovel' />,
+		navigationOptions: ({ navigation }) => ({
+			header: () => (
+				<CustomHeader
+					leftIcon='bars'
+					title='BookMyNovel'
+					showRight={true}
+					rightIcon='book'
+					buttonRightPress={() => navigation.navigate('BorrowPage')}
+				/>
+			),
 		}),
 	},
 	Details: {
 		screen: Details,
-		navigationOptions: () => ({
+		navigationOptions: {
+			tabBarVisible: false,
 			header: null,
-		}),
+		},
 	},
-	Search: { screen: SearchScreen },
+	Search: {
+		screen: SearchScreen,
+		navigationOptions: {
+			header: null,
+		},
+	},
+	BorrowPage: {
+		screen: BorrowList,
+		navigationOptions: {
+			header: null,
+		},
+	},
 })
 
 const BottomNavigator = createBottomTabNavigator(
@@ -35,7 +58,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'Explore',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='compass'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
@@ -48,7 +71,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'History',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='history'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
@@ -61,7 +84,7 @@ const BottomNavigator = createBottomTabNavigator(
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ tintColor }) => (
 					<Icon
-						type='FontAwesome'
+						type='FontAwesome5'
 						name='user'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
@@ -85,8 +108,26 @@ const BottomNavigator = createBottomTabNavigator(
 	}
 )
 
+const AuthNavigator = createStackNavigator({
+	Login: {
+		screen: Login,
+		navigationOptions: {
+			tabBarVisible: false,
+			header: null,
+		},
+	},
+	Register: {
+		screen: Register,
+		navigationOptions: {
+			tabBarVisible: false,
+			header: null,
+		},
+	},
+})
+
 const switchScreen = createSwitchNavigator({
 	Splash: SplashScreen,
+	AuthScreen: AuthNavigator,
 	App: BottomNavigator,
 })
 
