@@ -77,6 +77,27 @@ export const user = (prevstate = initState, action) => {
 				isFulfilled: true,
 				borrowData: action.payload.data.borrow,
 			}
+		case 'RETURN_BORROW_PENDING':
+			return {
+				...prevstate,
+				isLoading: true,
+				isRejected: false,
+				isFulfilled: false,
+			}
+		case 'RETURN_BORROW_REJECTED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isRejected: true,
+				error: action.payload.response.data,
+			}
+		case 'RETURN_BORROW_FULFILLED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isRejected: false,
+				isFulfilled: true,
+			}
 
 		default:
 			return prevstate

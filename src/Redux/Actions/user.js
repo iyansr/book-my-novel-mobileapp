@@ -33,3 +33,17 @@ export const getBorrow = (userId, token) => {
 		),
 	}
 }
+export const returnBorrow = (userId, data, token) => {
+	return {
+		type: 'RETURN_BORROW',
+		payload: Axios.patch(
+			`https://bookmynovel-api.herokuapp.com/api/v2/borrowlist/${userId}`,
+			data,
+			{
+				headers: {
+					Authorization: 'bearer ' + token,
+				},
+			}
+		),
+	}
+}

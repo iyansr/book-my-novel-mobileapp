@@ -9,10 +9,11 @@ import {
 	ToastAndroid,
 	StyleSheet,
 	ActivityIndicator,
+	Alert,
 } from 'react-native'
 import CustomHeader from '../Components/Header/Header'
 import { connect } from 'react-redux'
-import { getBorrow } from '../Redux/Actions/user'
+import { getBorrow, returnBorrow } from '../Redux/Actions/user'
 import NovelHistory from '../Components/Home/NovelHistory'
 
 class BorrowList extends Component {
@@ -25,7 +26,8 @@ class BorrowList extends Component {
 			userId: '',
 		}
 	}
-	async componentDidMount() {
+
+	async getBorrowList() {
 		try {
 			if (await AsyncStorage.getItem('userData')) {
 				const user = await AsyncStorage.getItem('userData')
@@ -45,6 +47,9 @@ class BorrowList extends Component {
 		} catch (error) {
 			this.setState({ isLoading: false, isEmpty: true })
 		}
+	}
+	async componentDidMount() {
+		this.getBorrowList()
 	}
 
 	componentWillUnmount() {
@@ -81,6 +86,10 @@ class BorrowList extends Component {
 						title='Borrow List'
 						showRight={true}
 						rightIcon='sync-alt'
+						buttonRightPress={() => {
+							this.setState({ isLoading: true })
+							this.getBorrowList()
+						}}
 					/>
 					<View
 						style={{
@@ -120,7 +129,13 @@ class BorrowList extends Component {
 						buttonLeftPress={() => this.props.navigation.goBack()}
 						leftIcon='chevron-left'
 						showLeft={true}
+						rightIcon='sync-alt'
+						showRight={true}
 						title='Borrow List'
+						buttonRightPress={() => {
+							this.setState({ isLoading: true })
+							this.getBorrowList()
+						}}
 					/>
 					<ScrollView
 						contentContainerStyle={{ padding: 12 }}
@@ -129,6 +144,41 @@ class BorrowList extends Component {
 							data={this.state.BorrowList}
 							onPress={data => {
 								ToastAndroid.show(data.title, ToastAndroid.SHORT)
+							}}
+							returnAction={(novelId, borrow_id) => {
+								Alert.alert(
+									'Are you sure want to log out?',
+									`${novelId} bor: ${borrow_id}`,
+									[
+										{
+											text: 'Cancel',
+											onPress: () => console.log('Cancel Pressed'),
+											style: 'cancel',
+										},
+										{
+											text: 'OK',
+											onPress: async () => {
+												// this.setState({ isLoading: true })
+												// this.getBorrowList()
+												try {
+													this.setState({ isLoading: true })
+													const formData = new FormData()
+													formData.append('borrow_id', borrow_id)
+													formData.append('novel_id', novelId)
+													const token = await AsyncStorage.getItem('userToken')
+
+													await this.props.dispatch(
+														returnBorrow(this.state.userId, formData, token)
+													)
+													ToastAndroid.show('Succes Return', ToastAndroid.SHORT)
+													this.getBorrowList()
+												} catch (error) {
+													console.log(error.response.data)
+												}
+											},
+										},
+									]
+								)
 							}}
 						/>
 					</ScrollView>

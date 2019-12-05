@@ -106,7 +106,9 @@ export class NovelHistory extends Component {
 									</View>
 
 									<Button
-										onPress={() => console.log(da.Novel.novel_id)}
+										onPress={() =>
+											this.props.returnAction(da.Novel.novel_id, da.borrow_id)
+										}
 										style={{
 											marginTop: 10,
 											width: 60,
