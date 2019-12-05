@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, ScrollView, ActivityIndicator } from 'react-native'
+import {
+	View,
+	ScrollView,
+	ActivityIndicator,
+	RefreshControl,
+	ToastAndroid,
+} from 'react-native'
 import Genre from '../Components/Home/Genre'
 import SectionTitle from '../Components/Home/SectionTitle'
 import Popular from '../Components/Home/Popular'
@@ -21,6 +27,7 @@ class Home extends Component {
 			dataPopular: [],
 			isLoading: true,
 			userId: '',
+			refreshing: false,
 		}
 	}
 
@@ -95,6 +102,25 @@ class Home extends Component {
 					}}
 				/>
 				<ScrollView
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.refreshing}
+							onRefresh={async () => {
+								this.setState({
+									refreshing: true,
+								})
+								try {
+									await this.getAllNovel()
+									await this.getPopularNovel()
+									this.setState({
+										refreshing: false,
+									})
+								} catch (error) {
+									ToastAndroid.show('Error', ToastAndroid.SHORT)
+								}
+							}}
+						/>
+					}
 					contentContainerStyle={{ padding: 12 }}
 					showsVerticalScrollIndicator={false}>
 					<Genre genres={this.state.genres} />

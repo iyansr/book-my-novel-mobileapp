@@ -60,7 +60,7 @@ class Profile extends Component {
 				<CustomHeader
 					title='Profile'
 					showRight={true}
-					rightIcon='sign-out-alt'
+					rightIcon='exit-to-app'
 					buttonRightPress={this.logOut.bind(this)}
 				/>
 				<ScrollView contentContainerStyle={{ marginHorizontal: 10 }}>

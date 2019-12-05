@@ -111,13 +111,7 @@ class WhishList extends Component {
 						showsVerticalScrollIndicator={false}>
 						<WhishListItem
 							data={this.state.whishData}
-							unFavourite={(noveId, wishId) =>
-								// console.log({
-								// 	noveId,
-								// 	wishId,
-								// })
-								this.removeWhishlist(wishId)
-							}
+							unFavourite={(noveId, wishId) => this.removeWhishlist(wishId)}
 						/>
 					</ScrollView>
 				</View>
@@ -157,7 +151,7 @@ class WhishList extends Component {
 							}}>
 							<Text style={styles.emptyText}>Upss..</Text>
 							<Text style={styles.emptyText}>
-								Looks like you didn't have any whishlist yet
+								Looks like you didn't have any favourite yet
 							</Text>
 							<Text
 								style={styles.emptyLink}

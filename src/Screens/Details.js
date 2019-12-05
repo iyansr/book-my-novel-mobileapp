@@ -119,7 +119,6 @@ class Details extends Component {
 				const userId = this.props.navigation.getParam('userId')
 				const data = this.props.navigation.getParam('data')
 				const userToken = this.state.userToken
-				//	https://bookmynovel-api.herokuapp.com/api/v2/whishlist/324297fd-a10a-4b23-b259-f7c95121b432
 				const formData = new FormData()
 				formData.append('novel_id', data.novel_id)
 				const response = await Axios.post(
