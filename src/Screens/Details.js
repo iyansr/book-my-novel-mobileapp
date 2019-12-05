@@ -9,6 +9,7 @@ import {
 	StyleSheet,
 	ActivityIndicator,
 	Alert,
+	ToastAndroid,
 } from 'react-native'
 import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -62,16 +63,20 @@ class Details extends Component {
 			},
 			{
 				text: 'Confirm',
-				onPress: () => {
-					this.props.dispatc(addBorrow())
-
-					// Alert.alert('Succes Borrow', '', [
-					// 	{
-					// 		text: 'Ok',
-					// 		onPress: () => {},
-					// 		style: 'default',
-					// 	},
-					// ])
+				onPress: async () => {
+					try {
+						const userId = this.props.navigation.getParam('userId')
+						const userToken = this.state.userToken
+						const data = this.props.navigation.getParam('data')
+						const idBook = data.novel_id
+						let formData = new FormData()
+						formData.append('novel_id', idBook)
+						ToastAndroid.show('Succes Borrow', ToastAndroid.SHORT)
+						await this.props.dispatch(addBorrow(userId, userToken, formData))
+						this.checkBorrowed()
+					} catch (error) {
+						console.log(this.props.user.error)
+					}
 				},
 				style: 'default',
 			},
@@ -86,13 +91,6 @@ class Details extends Component {
 			const userId = this.props.navigation.getParam('userId')
 			const data = this.props.navigation.getParam('data')
 			const userToken = this.state.userToken
-			// console.log({
-			// 	data: {
-			// 		userId,
-			// 		data,
-			// 		userToken,
-			// 	},
-			// })
 			await this.props.dispatch(checkBorrow(userId, data.novel_id, userToken))
 			this.setState({
 				isBorrowed: this.props.user.isBorrowed,

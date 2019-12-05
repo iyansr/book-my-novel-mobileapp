@@ -46,19 +46,23 @@ class Home extends Component {
 			console.log(error)
 		}
 	}
-	componentDidMount = async () => {
-		this.getAllNovel()
-		this.getPopularNovel()
+	async getUserData() {
 		try {
 			if (await AsyncStorage.getItem('userData')) {
 				const user = await AsyncStorage.getItem('userData')
 				const parsed = JSON.parse(user)
 				this.setState({
 					userId: parsed.user_id,
-					isLoading: false,
 				})
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	componentDidMount = () => {
+		this.getAllNovel()
+		this.getPopularNovel()
+		this.getUserData()
 	}
 	componentWillUnmount() {
 		this.source.cancel()
