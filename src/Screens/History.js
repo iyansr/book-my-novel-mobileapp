@@ -1,58 +1,119 @@
 import React, { Component } from 'react'
 import { Header, Container, Title, Body } from 'native-base'
-import { Text, View, ScrollView, Image, StyleSheet } from 'react-native'
+import {
+	Text,
+	View,
+	ScrollView,
+	Image,
+	StyleSheet,
+	ActivityIndicator,
+} from 'react-native'
 import CustomHeader from '../Components/Header/Header'
+import HistoryNovel from '../Components/Home/HistoryNovel'
+import { borrowHistoryList } from '../Redux/Actions/user'
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage'
 
 class History extends Component {
 	constructor() {
 		super()
 		this.state = {
 			isEmpty: true,
+			isLoading: true,
+			historyList: [],
 		}
 	}
+	async getHistory() {
+		try {
+			if (await AsyncStorage.getItem('userData')) {
+				const token = await AsyncStorage.getItem('userToken')
+				const user = await AsyncStorage.getItem('userData')
+				const parsed = JSON.parse(user)
+				const userId = parsed.user_id
+				await this.props.dispatch(borrowHistoryList(userId, token))
+				this.setState({
+					historyList: this.props.user.historyList,
+					isEmpty: false,
+					isLoading: false,
+				})
+			}
+		} catch (error) {
+			this.setState({
+				isEmpty: true,
+				isLoading: false,
+			})
+		}
+	}
+
+	componentDidMount() {
+		this.getHistory()
+	}
 	render() {
-		return this.state.isEmpty ? (
-			<>
-				<CustomHeader title='History' />
-				<View
-					style={{
-						flex: 1,
-						justifyContent: 'center',
-						alignItems: 'center',
-						backgroundColor: 'white',
-					}}>
-					<Image
-						source={{
-							uri:
-								'https://res.cloudinary.com/iyansrcloud/image/upload/v1575381109/empty_state_kyd2jn.jpg',
-						}}
-						style={{ height: 300, width: 300, marginTop: -60 }}
+		if (this.state.isLoading) {
+			return (
+				<>
+					<CustomHeader
+						title='History List'
+						showRight={true}
+						rightIcon='sync-alt'
 					/>
 					<View
 						style={{
+							flex: 1,
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}>
+						<ActivityIndicator size='large' color='#4a148c' />
+					</View>
+				</>
+			)
+		} else {
+			return this.state.isEmpty ? (
+				<>
+					<CustomHeader title='History' showRight={true} rightIcon='sync' />
+					<View
+						style={{
+							flex: 1,
 							justifyContent: 'center',
 							alignItems: 'center',
 							backgroundColor: 'white',
 						}}>
-						<Text style={styles.emptyText}>Upss..</Text>
-						<Text style={styles.emptyText}>
-							Looks like you didn't borry any Novel yet
-						</Text>
-						<Text
-							style={styles.emptyLink}
-							onPress={() => this.props.navigation.navigate('Home')}>
-							Explore Novel
-						</Text>
+						<Image
+							source={{
+								uri:
+									'https://res.cloudinary.com/iyansrcloud/image/upload/v1575381109/empty_state_kyd2jn.jpg',
+							}}
+							style={{ height: 300, width: 300, marginTop: -60 }}
+						/>
+						<View
+							style={{
+								justifyContent: 'center',
+								alignItems: 'center',
+								backgroundColor: 'white',
+							}}>
+							<Text style={styles.emptyText}>Upss..</Text>
+							<Text style={styles.emptyText}>
+								Looks like you didn't borry any Novel yet
+							</Text>
+							<Text
+								style={styles.emptyLink}
+								onPress={() => this.props.navigation.navigate('Home')}>
+								Explore Novel
+							</Text>
+						</View>
 					</View>
+				</>
+			) : (
+				<View>
+					<CustomHeader title='History' showRight={true} rightIcon='sync' />
+					<ScrollView
+						contentContainerStyle={{ padding: 12 }}
+						showsVerticalScrollIndicator={false}>
+						<HistoryNovel data={this.state.historyList} />
+					</ScrollView>
 				</View>
-			</>
-		) : (
-			<View>
-				<ScrollView>
-					<CustomHeader title='History' />
-				</ScrollView>
-			</View>
-		)
+			)
+		}
 	}
 }
 
@@ -70,4 +131,10 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default History
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+	}
+}
+
+export default connect(mapStateToProps)(History)

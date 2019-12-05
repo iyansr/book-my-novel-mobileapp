@@ -14,7 +14,7 @@ import {
 import CustomHeader from '../Components/Header/Header'
 import { connect } from 'react-redux'
 import { getBorrow, returnBorrow } from '../Redux/Actions/user'
-import NovelHistory from '../Components/Home/NovelHistory'
+import NovelHistory from '../Components/Home/NovelBorrow'
 
 class BorrowList extends Component {
 	constructor() {
@@ -56,7 +56,6 @@ class BorrowList extends Component {
 		this.setState({ isLoading: false })
 	}
 	render() {
-		console.log('BORRROW LIST', this.state.BorrowList)
 		if (this.state.isLoading) {
 			return (
 				<>

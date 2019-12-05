@@ -8,6 +8,7 @@ const initState = {
 	isFulfilled: false,
 	borrowData: [],
 	isBorrowed: false,
+	historyList: [],
 }
 
 export const user = (prevstate = initState, action) => {
@@ -145,6 +146,29 @@ export const user = (prevstate = initState, action) => {
 				isLoading: false,
 				isFulfilled: true,
 				isBorrowed: action.payload.data,
+			}
+		case 'BORROW_HISTORY_PENDING':
+			return {
+				...prevstate,
+				isLoading: true,
+				isRejected: false,
+				isFulfilled: false,
+			}
+
+		case 'BORROW_HISTORY_REJECTED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isRejected: true,
+				error: action.payload.response.data,
+			}
+
+		case 'BORROW_HISTORY_FULFILLED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isFulfilled: true,
+				historyList: action.payload.data.borrow,
 			}
 
 		default:
