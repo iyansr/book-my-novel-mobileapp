@@ -59,12 +59,7 @@ class BorrowList extends Component {
 		if (this.state.isLoading) {
 			return (
 				<>
-					<CustomHeader
-						buttonLeftPress={() => this.props.navigation.goBack()}
-						leftIcon='chevron-left'
-						showLeft={true}
-						title='Borrow List'
-					/>
+					<CustomHeader title='Borrow List' />
 					<View
 						style={{
 							flex: 1,
@@ -79,12 +74,9 @@ class BorrowList extends Component {
 			return this.state.isEmpty ? (
 				<>
 					<CustomHeader
-						buttonLeftPress={() => this.props.navigation.goBack()}
-						leftIcon='chevron-left'
-						showLeft={true}
 						title='Borrow List'
 						showRight={true}
-						rightIcon='sync-alt'
+						rightIcon='autorenew'
 						buttonRightPress={() => {
 							this.setState({ isLoading: true })
 							this.getBorrowList()
@@ -112,7 +104,7 @@ class BorrowList extends Component {
 							}}>
 							<Text style={styles.emptyText}>Upss..</Text>
 							<Text style={styles.emptyText}>
-								Looks like you didn't borry any Novel yet
+								Looks like you didn't borrow any Novel yet
 							</Text>
 							<Text
 								style={styles.emptyLink}
@@ -125,10 +117,7 @@ class BorrowList extends Component {
 			) : (
 				<>
 					<CustomHeader
-						buttonLeftPress={() => this.props.navigation.goBack()}
-						leftIcon='chevron-left'
-						showLeft={true}
-						rightIcon='sync-alt'
+						rightIcon='autorenew'
 						showRight={true}
 						title='Borrow List'
 						buttonRightPress={() => {

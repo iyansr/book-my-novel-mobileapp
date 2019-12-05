@@ -16,6 +16,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { addBorrow, checkBorrow } from '../Redux/Actions/user'
 import { connect } from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
+import Axios from 'axios'
 class Details extends Component {
 	static navigationOptions = {
 		tabBarVisible: false,
@@ -28,6 +29,7 @@ class Details extends Component {
 			data: {},
 			isLoading: true,
 			isBorrowed: false,
+			isWhishlised: false,
 			userId: '',
 			userToken: '',
 		}
@@ -52,6 +54,7 @@ class Details extends Component {
 		})
 		await this.getToken()
 		await this.checkBorrowed()
+		await this.checkWhishList()
 	}
 
 	hanldeBorrow() {
@@ -102,6 +105,73 @@ class Details extends Component {
 			})
 		}
 	}
+	async handleWhishlist() {
+		if (this.state.isWhishlised) {
+			ToastAndroid.show(
+				'You already favourite this novel, you can remove from Favourite menu',
+				ToastAndroid.LONG
+			)
+		} else {
+			this.setState({
+				isWhishlised: true,
+			})
+			try {
+				const userId = this.props.navigation.getParam('userId')
+				const data = this.props.navigation.getParam('data')
+				const userToken = this.state.userToken
+				//	https://bookmynovel-api.herokuapp.com/api/v2/whishlist/324297fd-a10a-4b23-b259-f7c95121b432
+				const formData = new FormData()
+				formData.append('novel_id', data.novel_id)
+				const response = await Axios.post(
+					`https://bookmynovel-api.herokuapp.com/api/v2/whishlist/${userId}`,
+					formData,
+					{
+						headers: {
+							Authorization: 'bearer ' + userToken,
+						},
+					}
+				)
+				ToastAndroid.show('Added To Favourite', ToastAndroid.SHORT)
+				this.setState({
+					isWhishlised: response.data,
+				})
+			} catch (error) {
+				console.log(error)
+				this.setState({
+					isBorrowed: false,
+				})
+			}
+		}
+	}
+
+	async checkWhishList() {
+		this.setState({
+			isLoading: true,
+		})
+		try {
+			const userId = this.props.navigation.getParam('userId')
+			const data = this.props.navigation.getParam('data')
+			const userToken = this.state.userToken
+			// await this.props.dispatch(checkBorrow(userId, data.novel_id, userToken))
+			const response = await Axios.get(
+				`https://bookmynovel-api.herokuapp.com/api/v2/whishlist/check/whish?user_id=${userId}&novel_id=${data.novel_id}`,
+				{
+					headers: {
+						Authorization: 'bearer ' + userToken,
+					},
+				}
+			)
+			this.setState({
+				isWhishlised: response.data,
+				isLoading: false,
+			})
+		} catch (error) {
+			this.setState({
+				isBorrowed: false,
+				isLoading: false,
+			})
+		}
+	}
 
 	render() {
 		console.log('IS BORROWED', this.state.isBorrowed)
@@ -132,16 +202,33 @@ class Details extends Component {
 						flexDirection: 'column',
 						justifyContent: 'space-between',
 					}}>
-					<Button
-						transparent
-						style={{ width: 60 }}
-						onPress={() => this.props.navigation.goBack()}>
-						<Icon
-							type='FontAwesome'
-							name='chevron-left'
-							style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
-						/>
-					</Button>
+					<View
+						style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+						<Button
+							transparent
+							style={{ width: 60 }}
+							onPress={() => this.props.navigation.goBack()}>
+							<Icon
+								type='FontAwesome'
+								name='chevron-left'
+								style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
+							/>
+						</Button>
+						<Button
+							transparent
+							style={{ width: 60 }}
+							onPress={this.handleWhishlist.bind(this)}>
+							<Icon
+								type='MaterialIcons'
+								name='favorite'
+								style={{
+									color: this.state.isWhishlised ? 'red' : 'grey',
+									fontWeight: 'bold',
+								}}
+							/>
+						</Button>
+					</View>
+
 					<View>
 						<Text style={styles.bigTitle}>{title}</Text>
 						<Text

@@ -8,6 +8,8 @@ import {
 	Alert,
 	ToastAndroid,
 	ToolbarAndroid,
+	Dimensions,
+	Image,
 } from 'react-native'
 import CustomHeader from '../Components/Header/Header'
 
@@ -29,44 +31,82 @@ class Profile extends Component {
 		}
 	}
 
+	logOut() {
+		Alert.alert('Are you sure want to log out?', '', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{
+				text: 'OK',
+				onPress: async () => {
+					try {
+						await AsyncStorage.removeItem('userData')
+						await AsyncStorage.removeItem('userToken')
+						this.props.navigation.navigate('AuthScreen')
+					} catch (error) {
+						console.log(error)
+					}
+				},
+			},
+		])
+	}
+
 	render() {
+		console.log('USER', this.state.user)
 		return (
 			<View>
-				<ScrollView>
-					<CustomHeader title='Profile' />
-					<Button
-						onPress={() => {
-							Alert.alert('Are you sure want to log out?', '', [
-								{
-									text: 'Cancel',
-									onPress: () => console.log('Cancel Pressed'),
-									style: 'cancel',
-								},
-								{
-									text: 'OK',
-									onPress: async () => {
-										try {
-											await AsyncStorage.removeItem('userData')
-											await AsyncStorage.removeItem('userToken')
-											this.props.navigation.navigate('AuthScreen')
-										} catch (error) {
-											console.log(error)
-										}
-									},
-								},
-							])
+				<CustomHeader
+					title='Profile'
+					showRight={true}
+					rightIcon='sign-out-alt'
+					buttonRightPress={this.logOut.bind(this)}
+				/>
+				<ScrollView contentContainerStyle={{ marginHorizontal: 10 }}>
+					<View
+						style={{
+							width: Dimensions.get('window').width,
+							alignContent: 'center',
+							alignItems: 'center',
+							justifyContent: 'center',
+							marginTop: 10,
 						}}>
-						<Text>Log Out</Text>
-					</Button>
-					<Button
-						onPress={() => {
-							ToastAndroid.show('ini toast', ToastAndroid.SHORT)
+						<Image
+							source={{ uri: this.state.user.avatar }}
+							style={{
+								height: 200,
+								width: 200,
+								borderRadius: 200 / 2,
+							}}
+						/>
+					</View>
+					<View
+						style={{
+							width: Dimensions.get('window').width,
+							alignContent: 'center',
+							alignItems: 'center',
+							justifyContent: 'center',
+							marginTop: 10,
 						}}>
-						<Text>Toast</Text>
-					</Button>
-
-					<View>
-						<Text>{this.state.user.name}</Text>
+						<View>
+							<Text
+								style={{
+									fontFamily: 'Poppins-Bold',
+									fontSize: 18,
+								}}>
+								{this.state.user.name}
+							</Text>
+						</View>
+						<View>
+							<Text
+								style={{
+									fontFamily: 'Poppins-Regular',
+									fontSize: 13,
+								}}>
+								{this.state.user.email}
+							</Text>
+						</View>
 					</View>
 				</ScrollView>
 			</View>

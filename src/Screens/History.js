@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Header, Container, Title, Body } from 'native-base'
 import {
 	Text,
 	View,
@@ -7,6 +6,7 @@ import {
 	Image,
 	StyleSheet,
 	ActivityIndicator,
+	ToastAndroid,
 } from 'react-native'
 import CustomHeader from '../Components/Header/Header'
 import HistoryNovel from '../Components/Home/HistoryNovel'
@@ -52,11 +52,7 @@ class History extends Component {
 		if (this.state.isLoading) {
 			return (
 				<>
-					<CustomHeader
-						title='History List'
-						showRight={true}
-						rightIcon='sync-alt'
-					/>
+					<CustomHeader title='History' />
 					<View
 						style={{
 							flex: 1,
@@ -70,7 +66,11 @@ class History extends Component {
 		} else {
 			return this.state.isEmpty ? (
 				<>
-					<CustomHeader title='History' showRight={true} rightIcon='sync' />
+					<CustomHeader
+						title='History'
+						showRight={true}
+						rightIcon='autorenew'
+					/>
 					<View
 						style={{
 							flex: 1,
@@ -93,7 +93,7 @@ class History extends Component {
 							}}>
 							<Text style={styles.emptyText}>Upss..</Text>
 							<Text style={styles.emptyText}>
-								Looks like you didn't borry any Novel yet
+								Looks like you didn't borrow any Novel yet
 							</Text>
 							<Text
 								style={styles.emptyLink}
@@ -105,11 +105,25 @@ class History extends Component {
 				</>
 			) : (
 				<View>
-					<CustomHeader title='History' showRight={true} rightIcon='sync' />
+					<CustomHeader
+						title='History'
+						showRight={true}
+						rightIcon='autorenew'
+						buttonRightPress={() => {
+							this.setState({ isLoading: true })
+							this.getHistory()
+						}}
+					/>
 					<ScrollView
-						contentContainerStyle={{ padding: 12 }}
+						contentContainerStyle={{ padding: 12, backgroundColor: 'white' }}
 						showsVerticalScrollIndicator={false}>
-						<HistoryNovel data={this.state.historyList} />
+						<HistoryNovel
+							data={this.state.historyList}
+							onPress={data =>
+								ToastAndroid.show(data.Novel.title, ToastAndroid.SHORT)
+							}
+						/>
+						<View style={{ marginTop: 60 }}></View>
 					</ScrollView>
 				</View>
 			)

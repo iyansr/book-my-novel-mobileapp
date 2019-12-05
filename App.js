@@ -13,6 +13,7 @@ import SearchScreen from './src/Screens/Search'
 import Login from './src/Screens/Login'
 import Register from './src/Screens/Register'
 import BorrowList from './src/Screens/BorrowList'
+import WhishList from './src/Screens/WhishList'
 import { Provider } from 'react-redux'
 import store from './src/Redux/store'
 
@@ -22,11 +23,10 @@ const HomeNavigator = createStackNavigator({
 		navigationOptions: ({ navigation }) => ({
 			header: () => (
 				<CustomHeader
-					leftIcon='bars'
 					title='BookMyNovel'
 					showRight={true}
-					rightIcon='book'
-					buttonRightPress={() => navigation.navigate('BorrowPage')}
+					rightIcon='favorite'
+					buttonRightPress={() => navigation.navigate('WhishList')}
 				/>
 			),
 		}),
@@ -44,8 +44,8 @@ const HomeNavigator = createStackNavigator({
 			header: null,
 		},
 	},
-	BorrowPage: {
-		screen: BorrowList,
+	WhishList: {
+		screen: WhishList,
 		navigationOptions: {
 			header: null,
 		},
@@ -62,6 +62,19 @@ const BottomNavigator = createBottomTabNavigator(
 					<Icon
 						type='FontAwesome5'
 						name='compass'
+						style={{ color: tintColor, fontSize: 23 }}
+					/>
+				),
+			},
+		},
+		BorrowPage: {
+			screen: BorrowList,
+			navigationOptions: {
+				tabBarLabel: 'Borrow List',
+				tabBarIcon: ({ tintColor }) => (
+					<Icon
+						type='FontAwesome5'
+						name='book'
 						style={{ color: tintColor, fontSize: 23 }}
 					/>
 				),

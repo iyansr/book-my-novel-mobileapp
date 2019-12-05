@@ -88,7 +88,9 @@ class Home extends Component {
 			<View>
 				<BottomHeader
 					onPress={() => {
-						this.props.navigation.navigate('Search')
+						this.props.navigation.navigate('Search', {
+							userId: this.state.userId,
+						})
 						console.log('ini Search')
 					}}
 				/>
