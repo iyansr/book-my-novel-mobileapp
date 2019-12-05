@@ -33,12 +33,39 @@ export const getBorrow = (userId, token) => {
 		),
 	}
 }
+export const addBorrow = (user_id, token, data) => {
+	return {
+		type: 'ADD_BORROW',
+		payload: Axios.post(
+			`https://bookmynovel-api.herokuapp.com/api/v2/borrowlist/${user_id}`,
+			data,
+			{
+				headers: {
+					Authorization: 'bearer ' + token,
+				},
+			}
+		),
+	}
+}
 export const returnBorrow = (userId, data, token) => {
 	return {
 		type: 'RETURN_BORROW',
 		payload: Axios.patch(
 			`https://bookmynovel-api.herokuapp.com/api/v2/borrowlist/${userId}`,
 			data,
+			{
+				headers: {
+					Authorization: 'bearer ' + token,
+				},
+			}
+		),
+	}
+}
+export const checkBorrow = (userId, novelId, token) => {
+	return {
+		type: 'CHECK_BORROW',
+		payload: Axios.get(
+			`https://bookmynovel-api.herokuapp.com/api/v2/borrowlist/check/borrow?user_id=${userId}&novel_id=${novelId}`,
 			{
 				headers: {
 					Authorization: 'bearer ' + token,

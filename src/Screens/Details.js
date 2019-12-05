@@ -8,9 +8,13 @@ import {
 	Dimensions,
 	StyleSheet,
 	ActivityIndicator,
+	Alert,
 } from 'react-native'
 import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
+import { addBorrow, checkBorrow } from '../Redux/Actions/user'
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage'
 class Details extends Component {
 	static navigationOptions = {
 		tabBarVisible: false,
@@ -23,16 +27,86 @@ class Details extends Component {
 			data: {},
 			isLoading: true,
 			isBorrowed: false,
+			userId: '',
+			userToken: '',
 		}
 	}
 
-	componentDidMount() {
-		this.setState({
-			isLoading: false,
-			data: this.props.navigation.getParam('data'),
-		})
+	async getToken() {
+		try {
+			const token = await AsyncStorage.getItem('userToken')
+			this.setState({
+				userToken: token,
+			})
+		} catch (error) {
+			console.log(error)
+		}
 	}
+
+	async componentDidMount() {
+		this.setState({
+			userId: this.props.navigation.getParam('userId'),
+			data: this.props.navigation.getParam('data'),
+			isLoading: false,
+		})
+		await this.getToken()
+		await this.checkBorrowed()
+	}
+
+	hanldeBorrow() {
+		Alert.alert('Confirm Borrow', 'Are You sure want to borrow this novel?', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('cancel'),
+				style: 'cancel',
+			},
+			{
+				text: 'Confirm',
+				onPress: () => {
+					this.props.dispatc(addBorrow())
+
+					// Alert.alert('Succes Borrow', '', [
+					// 	{
+					// 		text: 'Ok',
+					// 		onPress: () => {},
+					// 		style: 'default',
+					// 	},
+					// ])
+				},
+				style: 'default',
+			},
+		])
+	}
+
+	async checkBorrowed() {
+		this.setState({
+			isLoading: true,
+		})
+		try {
+			const userId = this.props.navigation.getParam('userId')
+			const data = this.props.navigation.getParam('data')
+			const userToken = this.state.userToken
+			// console.log({
+			// 	data: {
+			// 		userId,
+			// 		data,
+			// 		userToken,
+			// 	},
+			// })
+			await this.props.dispatch(checkBorrow(userId, data.novel_id, userToken))
+			this.setState({
+				isBorrowed: this.props.user.isBorrowed,
+				isLoading: false,
+			})
+		} catch (error) {
+			this.setState({
+				isBorrowed: false,
+			})
+		}
+	}
+
 	render() {
+		console.log('IS BORROWED', this.state.isBorrowed)
 		const {
 			Genre,
 			Status,
@@ -54,7 +128,7 @@ class Details extends Component {
 				<ImageBackground
 					source={{ uri: image }}
 					style={{
-						backgroundColor: 'black',
+						backgroundColor: 'white',
 						width: '100%',
 						height: 250,
 						flexDirection: 'column',
@@ -98,6 +172,7 @@ class Details extends Component {
 							elevation: 10,
 							borderRadius: 5,
 							justifyContent: 'flex-end',
+							backgroundColor: 'white',
 						}}>
 						<Image
 							source={{ uri: image }}
@@ -167,26 +242,12 @@ class Details extends Component {
 
 				<View
 					style={{
-						paddingHorizontal: 80,
+						paddingHorizontal: 50,
 						paddingVertical: 20,
 					}}>
 					{this.state.isLoading ? (
 						<ActivityIndicator size='small' color='#4a148c' />
-					) : Status === 'Available' ? (
-						<Button
-							style={{
-								borderRadius: 50,
-								alignContent: 'center',
-								alignItems: 'center',
-								justifyContent: 'center',
-								backgroundColor: '#4a148c',
-								elevation: 8,
-							}}>
-							<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
-								Borrow
-							</Text>
-						</Button>
-					) : (
+					) : Status === 'Empty' || this.state.isBorrowed ? (
 						<Button
 							disabled
 							style={{
@@ -197,8 +258,29 @@ class Details extends Component {
 								backgroundColor: '#dedede',
 								elevation: 0,
 							}}>
-							<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
-								Novel Is Empty
+							{this.state.isBorrowed ? (
+								<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
+									You Already Borrow This Novel
+								</Text>
+							) : (
+								<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
+									Novel Is Empty
+								</Text>
+							)}
+						</Button>
+					) : (
+						<Button
+							onPress={this.hanldeBorrow.bind(this)}
+							style={{
+								borderRadius: 50,
+								alignContent: 'center',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#4a148c',
+								elevation: 8,
+							}}>
+							<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
+								Borrow
 							</Text>
 						</Button>
 					)}
@@ -232,5 +314,10 @@ const styles = StyleSheet.create({
 		marginBottom: 0,
 	},
 })
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+	}
+}
 
-export default Details
+export default connect(mapStateToProps)(Details)

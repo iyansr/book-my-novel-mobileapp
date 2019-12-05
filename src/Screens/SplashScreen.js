@@ -6,7 +6,10 @@ const FIVE_SECONDS = 3000
 
 export default class SplashScreen extends React.Component {
 	async componentDidMount() {
-		if (await AsyncStorage.getItem('userData')) {
+		if (
+			(await AsyncStorage.getItem('userData')) &&
+			(await AsyncStorage.getItem('userToken'))
+		) {
 			this.props.navigation.navigate('App')
 		} else {
 			this.props.navigation.navigate('AuthScreen')

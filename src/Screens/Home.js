@@ -8,6 +8,7 @@ import Axios from 'axios'
 import BottomHeader from '../Components/Header/BottomHeader'
 import { connect } from 'react-redux'
 import { getAllNovels } from '../Redux/Actions/novel'
+import AsyncStorage from '@react-native-community/async-storage'
 
 class Home extends Component {
 	constructor() {
@@ -19,6 +20,7 @@ class Home extends Component {
 			data: [],
 			dataPopular: [],
 			isLoading: true,
+			userId: '',
 		}
 	}
 
@@ -44,9 +46,19 @@ class Home extends Component {
 			console.log(error)
 		}
 	}
-	componentDidMount = () => {
+	componentDidMount = async () => {
 		this.getAllNovel()
 		this.getPopularNovel()
+		try {
+			if (await AsyncStorage.getItem('userData')) {
+				const user = await AsyncStorage.getItem('userData')
+				const parsed = JSON.parse(user)
+				this.setState({
+					userId: parsed.user_id,
+					isLoading: false,
+				})
+			}
+		} catch (error) {}
 	}
 	componentWillUnmount() {
 		this.source.cancel()
@@ -86,6 +98,7 @@ class Home extends Component {
 						onPress={data => {
 							this.props.navigation.navigate('Details', {
 								data,
+								userId: this.state.userId,
 							})
 						}}
 					/>
@@ -97,6 +110,7 @@ class Home extends Component {
 						onPress={data => {
 							this.props.navigation.navigate('Details', {
 								data,
+								userId: this.state.userId,
 							})
 						}}
 					/>

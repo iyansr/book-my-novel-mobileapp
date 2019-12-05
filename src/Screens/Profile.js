@@ -47,6 +47,7 @@ class Profile extends Component {
 									onPress: async () => {
 										try {
 											await AsyncStorage.removeItem('userData')
+											await AsyncStorage.removeItem('userToken')
 											this.props.navigation.navigate('AuthScreen')
 										} catch (error) {
 											console.log(error)

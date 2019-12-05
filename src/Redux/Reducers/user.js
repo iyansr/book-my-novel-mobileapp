@@ -7,6 +7,7 @@ const initState = {
 	isRejected: false,
 	isFulfilled: false,
 	borrowData: [],
+	isBorrowed: false,
 }
 
 export const user = (prevstate = initState, action) => {
@@ -97,6 +98,53 @@ export const user = (prevstate = initState, action) => {
 				isLoading: false,
 				isRejected: false,
 				isFulfilled: true,
+			}
+
+		case 'ADD_BORROW_PENDING':
+			return {
+				...prevstate,
+				isLoading: true,
+				isRejected: false,
+				isFulfilled: false,
+			}
+
+		case 'ADD_BORROW_REJECTED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isRejected: true,
+				error: action.payload.response.data,
+			}
+
+		case 'ADD_BORROW_FULFILLED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isFulfilled: true,
+			}
+
+		case 'CHECK_BORROW_PENDING':
+			return {
+				...prevstate,
+				isLoading: true,
+				isRejected: false,
+				isFulfilled: false,
+			}
+
+		case 'CHECK_BORROW_REJECTED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isRejected: true,
+				error: action.payload.response.data,
+			}
+
+		case 'CHECK_BORROW_FULFILLED':
+			return {
+				...prevstate,
+				isLoading: false,
+				isFulfilled: true,
+				isBorrowed: action.payload.data,
 			}
 
 		default:
