@@ -134,39 +134,35 @@ class BorrowList extends Component {
 								ToastAndroid.show(data.title, ToastAndroid.SHORT)
 							}}
 							returnAction={(novelId, borrow_id) => {
-								Alert.alert(
-									'Are you sure want to log out?',
-									`${novelId} bor: ${borrow_id}`,
-									[
-										{
-											text: 'Cancel',
-											onPress: () => console.log('Cancel Pressed'),
-											style: 'cancel',
-										},
-										{
-											text: 'OK',
-											onPress: async () => {
-												// this.setState({ isLoading: true })
-												// this.getBorrowList()
-												try {
-													this.setState({ isLoading: true })
-													const formData = new FormData()
-													formData.append('borrow_id', borrow_id)
-													formData.append('novel_id', novelId)
-													const token = await AsyncStorage.getItem('userToken')
+								Alert.alert('Confirm', `Are you sure want to return?`, [
+									{
+										text: 'Cancel',
+										onPress: () => console.log('Cancel Pressed'),
+										style: 'cancel',
+									},
+									{
+										text: 'OK',
+										onPress: async () => {
+											// this.setState({ isLoading: true })
+											// this.getBorrowList()
+											try {
+												this.setState({ isLoading: true })
+												const formData = new FormData()
+												formData.append('borrow_id', borrow_id)
+												formData.append('novel_id', novelId)
+												const token = await AsyncStorage.getItem('userToken')
 
-													await this.props.dispatch(
-														returnBorrow(this.state.userId, formData, token)
-													)
-													ToastAndroid.show('Succes Return', ToastAndroid.SHORT)
-													this.getBorrowList()
-												} catch (error) {
-													console.log(error.response.data)
-												}
-											},
+												await this.props.dispatch(
+													returnBorrow(this.state.userId, formData, token)
+												)
+												ToastAndroid.show('Succes Return', ToastAndroid.SHORT)
+												this.getBorrowList()
+											} catch (error) {
+												console.log(error.response.data)
+											}
 										},
-									]
-								)
+									},
+								])
 							}}
 						/>
 					</ScrollView>
