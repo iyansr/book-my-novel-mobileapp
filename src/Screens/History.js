@@ -70,6 +70,10 @@ class History extends Component {
 						title='History'
 						showRight={true}
 						rightIcon='autorenew'
+						buttonRightPress={() => {
+							this.setState({ isLoading: true })
+							this.getHistory()
+						}}
 					/>
 					<View
 						style={{

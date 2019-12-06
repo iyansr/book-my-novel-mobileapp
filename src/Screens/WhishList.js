@@ -110,6 +110,9 @@ class WhishList extends Component {
 						contentContainerStyle={{ padding: 12 }}
 						showsVerticalScrollIndicator={false}>
 						<WhishListItem
+							onPress={data =>
+								ToastAndroid.show(data.title, ToastAndroid.SHORT)
+							}
 							data={this.state.whishData}
 							unFavourite={(noveId, wishId) => this.removeWhishlist(wishId)}
 						/>

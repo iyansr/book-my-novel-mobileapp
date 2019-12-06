@@ -85,7 +85,7 @@ export class WhishListItem extends Component {
 											style={{
 												height: 16,
 												backgroundColor:
-													da.Status === 2 ? '#00C853' : '#F48FB1',
+													da.Novel.status === 2 ? '#00C853' : '#F48FB1',
 											}}>
 											{da.Novel.status === 2 ? (
 												<Text

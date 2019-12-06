@@ -44,7 +44,8 @@ class SearchScreen extends Component {
 		} catch (error) {
 			this.setState({
 				isLoading: false,
-				isEmpty: false,
+				isEmpty: true,
+				autoFocus: false,
 			})
 		}
 	}
