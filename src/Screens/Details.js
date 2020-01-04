@@ -7,18 +7,173 @@ import {
 	ImageBackground,
 	Dimensions,
 	StyleSheet,
+	ActivityIndicator,
+	Alert,
+	ToastAndroid,
 } from 'react-native'
 import { Button, Icon, Fab } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
+import { addBorrow, checkBorrow } from '../Redux/Actions/user'
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-community/async-storage'
+import Axios from 'axios'
 class Details extends Component {
 	static navigationOptions = {
 		tabBarVisible: false,
 		header: null,
 	}
-	state = {
-		data: this.props.navigation.getParam('data'),
+
+	constructor() {
+		super()
+		this.state = {
+			data: {},
+			isLoading: true,
+			isBorrowed: false,
+			isWhishlised: false,
+			userId: '',
+			userToken: '',
+		}
 	}
+
+	async getToken() {
+		try {
+			const token = await AsyncStorage.getItem('userToken')
+			this.setState({
+				userToken: token,
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	async componentDidMount() {
+		this.setState({
+			userId: this.props.navigation.getParam('userId'),
+			data: this.props.navigation.getParam('data'),
+			isLoading: false,
+		})
+		await this.getToken()
+		await this.checkBorrowed()
+		await this.checkWhishList()
+	}
+
+	hanldeBorrow() {
+		Alert.alert('Confirm Borrow', 'Are You sure want to borrow this novel?', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('cancel'),
+				style: 'cancel',
+			},
+			{
+				text: 'Confirm',
+				onPress: async () => {
+					try {
+						const userId = this.props.navigation.getParam('userId')
+						const userToken = this.state.userToken
+						const data = this.props.navigation.getParam('data')
+						const idBook = data.novel_id
+						let formData = new FormData()
+						formData.append('novel_id', idBook)
+						ToastAndroid.show('Succes Borrow', ToastAndroid.SHORT)
+						await this.props.dispatch(addBorrow(userId, userToken, formData))
+						this.checkBorrowed()
+					} catch (error) {
+						console.log(this.props.user.error)
+					}
+				},
+				style: 'default',
+			},
+		])
+	}
+
+	async checkBorrowed() {
+		this.setState({
+			isLoading: true,
+		})
+		try {
+			const userId = this.props.navigation.getParam('userId')
+			const data = this.props.navigation.getParam('data')
+			const userToken = this.state.userToken
+			await this.props.dispatch(checkBorrow(userId, data.novel_id, userToken))
+			this.setState({
+				isBorrowed: this.props.user.isBorrowed,
+				isLoading: false,
+			})
+		} catch (error) {
+			this.setState({
+				isBorrowed: false,
+			})
+		}
+	}
+	async handleWhishlist() {
+		if (this.state.isWhishlised) {
+			ToastAndroid.show(
+				'You already favourite this novel, you can remove from Favourite menu',
+				ToastAndroid.LONG
+			)
+		} else {
+			this.setState({
+				isWhishlised: true,
+			})
+			try {
+				const userId = this.props.navigation.getParam('userId')
+				const data = this.props.navigation.getParam('data')
+				const userToken = this.state.userToken
+				const formData = new FormData()
+				formData.append('novel_id', data.novel_id)
+				const response = await Axios.post(
+					`https://bookmynovel-api.herokuapp.com/api/v2/whishlist/${userId}`,
+					formData,
+					{
+						headers: {
+							Authorization: 'bearer ' + userToken,
+						},
+					}
+				)
+				ToastAndroid.show('Added To Favourite', ToastAndroid.SHORT)
+				this.setState({
+					isWhishlised: response.data,
+				})
+			} catch (error) {
+				console.log(error)
+				this.setState({
+					isBorrowed: false,
+				})
+			}
+		}
+	}
+
+	async checkWhishList() {
+		this.setState({
+			isLoading: true,
+		})
+		try {
+			const userId = this.props.navigation.getParam('userId')
+			const data = this.props.navigation.getParam('data')
+			const userToken = this.state.userToken
+			// await this.props.dispatch(checkBorrow(userId, data.novel_id, userToken))
+			const response = await Axios.get(
+				`https://bookmynovel-api.herokuapp.com/api/v2/whishlist/check/whish?user_id=${userId}&novel_id=${data.novel_id}`,
+				{
+					headers: {
+						Authorization: 'bearer ' + userToken,
+					},
+				}
+			)
+			this.setState({
+				isWhishlised: response.data,
+				isLoading: false,
+			})
+		} catch (error) {
+			this.setState({
+				isBorrowed: false,
+				isLoading: false,
+			})
+		}
+	}
+
 	render() {
+		console.log('IS BORROWED', this.state.isBorrowed)
 		const {
 			Genre,
 			Status,
@@ -40,19 +195,39 @@ class Details extends Component {
 				<ImageBackground
 					source={{ uri: image }}
 					style={{
-						backgroundColor: 'black',
+						backgroundColor: 'white',
 						width: '100%',
 						height: 250,
 						flexDirection: 'column',
 						justifyContent: 'space-between',
 					}}>
-					<Button transparent onPress={() => this.props.navigation.goBack()}>
-						<Icon
-							type='FontAwesome'
-							name='chevron-left'
-							style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
-						/>
-					</Button>
+					<View
+						style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+						<Button
+							transparent
+							style={{ width: 60 }}
+							onPress={() => this.props.navigation.goBack()}>
+							<Icon
+								type='FontAwesome'
+								name='chevron-left'
+								style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
+							/>
+						</Button>
+						<Button
+							transparent
+							style={{ width: 60 }}
+							onPress={this.handleWhishlist.bind(this)}>
+							<Icon
+								type='MaterialIcons'
+								name='favorite'
+								style={{
+									color: this.state.isWhishlised ? 'red' : 'grey',
+									fontWeight: 'bold',
+								}}
+							/>
+						</Button>
+					</View>
+
 					<View>
 						<Text style={styles.bigTitle}>{title}</Text>
 						<Text
@@ -81,6 +256,7 @@ class Details extends Component {
 							elevation: 10,
 							borderRadius: 5,
 							justifyContent: 'flex-end',
+							backgroundColor: 'white',
 						}}>
 						<Image
 							source={{ uri: image }}
@@ -150,22 +326,48 @@ class Details extends Component {
 
 				<View
 					style={{
-						paddingHorizontal: 80,
+						paddingHorizontal: 50,
 						paddingVertical: 20,
 					}}>
-					<Button
-						style={{
-							borderRadius: 50,
-							alignContent: 'center',
-							alignItems: 'center',
-							justifyContent: 'center',
-							backgroundColor: '#4a148c',
-							elevation: 8,
-						}}>
-						<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
-							Borrow
-						</Text>
-					</Button>
+					{this.state.isLoading ? (
+						<ActivityIndicator size='small' color='#4a148c' />
+					) : Status === 'Empty' || this.state.isBorrowed ? (
+						<Button
+							disabled
+							style={{
+								borderRadius: 50,
+								alignContent: 'center',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#dedede',
+								elevation: 0,
+							}}>
+							{this.state.isBorrowed ? (
+								<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
+									You Already Borrow This Novel
+								</Text>
+							) : (
+								<Text style={{ fontFamily: 'Poppins-Bold', color: 'black' }}>
+									Novel Is Empty
+								</Text>
+							)}
+						</Button>
+					) : (
+						<Button
+							onPress={this.hanldeBorrow.bind(this)}
+							style={{
+								borderRadius: 50,
+								alignContent: 'center',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: '#4a148c',
+								elevation: 8,
+							}}>
+							<Text style={{ fontFamily: 'Poppins-Bold', color: 'white' }}>
+								Borrow
+							</Text>
+						</Button>
+					)}
 				</View>
 			</ScrollView>
 		)
@@ -193,8 +395,13 @@ const styles = StyleSheet.create({
 		marginLeft: 12,
 		fontFamily: 'Poppins-Bold',
 		width: '60%',
-		marginBottom: 9,
+		marginBottom: 0,
 	},
 })
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+	}
+}
 
-export default Details
+export default connect(mapStateToProps)(Details)

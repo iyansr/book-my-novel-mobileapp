@@ -1,6 +1,9 @@
 import Axios from 'axios'
 import React, { Component } from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
+import { connect } from 'react-redux'
+import { loginUser } from '../Redux/Actions/user'
+import jwt_decode from 'jwt-decode'
 
 import {
 	Container,
@@ -22,6 +25,7 @@ import {
 	TouchableHighlight,
 	ActivityIndicator,
 	Keyboard,
+	ToastAndroid,
 } from 'react-native'
 class Login extends Component {
 	constructor() {
@@ -48,31 +52,27 @@ class Login extends Component {
 		this._isMounted = true
 	}
 
-	async loginUser() {
+	async goLogin() {
 		this._isMounted && this.setState({ isLoading: true })
 		this._isMounted && Keyboard.dismiss()
 
 		if (this._isMounted) {
 			try {
-				console.log({
-					email: this.state.email,
-					password: this.state.password,
-				})
 				const formData = new FormData()
 				formData.append('email', this.state.email)
 				formData.append('password', this.state.password)
 
-				const result = await Axios.post(
-					'https://stormy-eyrie-12807.herokuapp.com/api/v2/users/login',
-					formData,
-					{ cancelToken: this.source.token }
-				)
-				await AsyncStorage.setItem('userToken', result.data)
+				await this.props.dispatch(loginUser(formData))
+				const decoded = await jwt_decode(this.props.user.userToken)
+				console.log(decoded)
+				await AsyncStorage.setItem('userData', JSON.stringify(decoded))
+				await AsyncStorage.setItem('userToken', this.props.user.userToken)
+				ToastAndroid.show('Succes Login', ToastAndroid.SHORT)
 				this.props.navigation.navigate('App')
 				this.setState({ isLoading: false })
 			} catch (error) {
 				this.setState({
-					error: error.response.data,
+					error: this.props.user.error,
 					isLoading: false,
 				})
 			}
@@ -80,7 +80,7 @@ class Login extends Component {
 	}
 
 	onSubmit() {
-		this._isMounted && this.loginUser()
+		this._isMounted && this.goLogin()
 	}
 
 	componentWillUnmount() {
@@ -222,4 +222,10 @@ class Login extends Component {
 	}
 }
 
-export default Login
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+	}
+}
+
+export default connect(mapStateToProps)(Login)

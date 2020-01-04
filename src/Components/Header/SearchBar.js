@@ -21,8 +21,7 @@ class SearchBar extends Component {
 					<Input
 						placeholder='Search'
 						style={{ marginLeft: 10 }}
-						autoFocus={true}
-						value={this.props.value}
+						autoFocus={this.props.autoFocus}
 						onChangeText={this.props.onChange}
 					/>
 

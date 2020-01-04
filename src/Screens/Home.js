@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
-import { View, ScrollView, ActivityIndicator } from 'react-native'
+import {
+	View,
+	ScrollView,
+	ActivityIndicator,
+	RefreshControl,
+	ToastAndroid,
+} from 'react-native'
 import Genre from '../Components/Home/Genre'
 import SectionTitle from '../Components/Home/SectionTitle'
 import Popular from '../Components/Home/Popular'
 import AllNovel from '../Components/Home/AllNovel'
 import Axios from 'axios'
 import BottomHeader from '../Components/Header/BottomHeader'
+import { connect } from 'react-redux'
+import { getAllNovels } from '../Redux/Actions/novel'
+import AsyncStorage from '@react-native-community/async-storage'
 
 class Home extends Component {
 	constructor() {
 		super()
-		this._isMounted = false
 		this.CancelToken = Axios.CancelToken
 		this.source = this.CancelToken.source()
 		this.state = {
@@ -18,45 +26,52 @@ class Home extends Component {
 			data: [],
 			dataPopular: [],
 			isLoading: true,
+			userId: '',
+			refreshing: false,
 		}
 	}
 
 	getAllNovel = async () => {
 		try {
-			const response = await Axios.get(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=100&page=1'
-			)
-			this._isMounted &&
-				this.setState({
-					data: response.data.result,
-					isLoading: false,
-				})
+			await this.props.dispatch(getAllNovels(''))
+			this.setState({
+				data: this.props.novels.novelData,
+				isLoading: false,
+			})
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	getPopularNovel = async () => {
 		try {
-			const response = await Axios.get(
-				'https://stormy-eyrie-12807.herokuapp.com/api/v2/novel?limit=4&page=2',
-				{ cancelToken: this.source.token }
-			)
-			this._isMounted &&
+			await this.props.dispatch(getAllNovels('?limit=4&page=2'))
+			this.setState({
+				dataPopular: this.props.novels.novelData,
+				isLoading: false,
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	async getUserData() {
+		try {
+			if (await AsyncStorage.getItem('userData')) {
+				const user = await AsyncStorage.getItem('userData')
+				const parsed = JSON.parse(user)
 				this.setState({
-					dataPopular: response.data.result,
-					isLoading: false,
+					userId: parsed.user_id,
 				})
+			}
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	componentDidMount = () => {
-		this._isMounted = true
-		this._isMounted && this.getAllNovel()
-		this._isMounted && this.getPopularNovel()
+		this.getAllNovel()
+		this.getPopularNovel()
+		this.getUserData()
 	}
 	componentWillUnmount() {
-		this._isMounted = false
 		this.source.cancel()
 	}
 
@@ -80,11 +95,32 @@ class Home extends Component {
 			<View>
 				<BottomHeader
 					onPress={() => {
-						this.props.navigation.navigate('Search')
+						this.props.navigation.navigate('Search', {
+							userId: this.state.userId,
+						})
 						console.log('ini Search')
 					}}
 				/>
 				<ScrollView
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.refreshing}
+							onRefresh={async () => {
+								this.setState({
+									refreshing: true,
+								})
+								try {
+									await this.getAllNovel()
+									await this.getPopularNovel()
+									this.setState({
+										refreshing: false,
+									})
+								} catch (error) {
+									ToastAndroid.show('Error', ToastAndroid.SHORT)
+								}
+							}}
+						/>
+					}
 					contentContainerStyle={{ padding: 12 }}
 					showsVerticalScrollIndicator={false}>
 					<Genre genres={this.state.genres} />
@@ -94,6 +130,7 @@ class Home extends Component {
 						onPress={data => {
 							this.props.navigation.navigate('Details', {
 								data,
+								userId: this.state.userId,
 							})
 						}}
 					/>
@@ -105,6 +142,7 @@ class Home extends Component {
 						onPress={data => {
 							this.props.navigation.navigate('Details', {
 								data,
+								userId: this.state.userId,
 							})
 						}}
 					/>
@@ -115,4 +153,10 @@ class Home extends Component {
 	}
 }
 
-export default Home
+const mapStateToProps = state => {
+	return {
+		novels: state.novels,
+	}
+}
+
+export default connect(mapStateToProps)(Home)

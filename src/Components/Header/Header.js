@@ -16,7 +16,7 @@ class CustomHeader extends Component {
 						<Left>
 							<Button transparent onPress={this.props.buttonLeftPress}>
 								<Icon
-									type='FontAwesome'
+									type='FontAwesome5'
 									name={this.props.leftIcon}
 									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
 								/>
@@ -31,7 +31,7 @@ class CustomHeader extends Component {
 						{showRight ? (
 							<Button transparent onPress={this.props.buttonRightPress}>
 								<Icon
-									type='FontAwesome5'
+									type='MaterialIcons'
 									name={this.props.rightIcon}
 									style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}
 								/>
